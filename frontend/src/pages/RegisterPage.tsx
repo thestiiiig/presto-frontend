@@ -43,7 +43,7 @@ function RegisterPage() {
     };
 
     return (
-        <div>
+        <div className="form-group">
             <h1>Register</h1>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <input
