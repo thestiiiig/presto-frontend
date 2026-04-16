@@ -12,6 +12,11 @@ function RegisterPage() {
     const handleRegister = async () => {
         setError('');
 
+        if (!name || !email || !password || !confirmPassword) {
+            setError('All fields are required.');
+            return;
+        }
+
         if (password !== confirmPassword) {
             setError('Passwords do not match.');
             return;
