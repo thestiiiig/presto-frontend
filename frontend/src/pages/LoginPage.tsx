@@ -29,7 +29,7 @@ function LoginPage() {
             navigate('/dashboard')
         } catch {
             setError('Something went wrong. Please try again.');
-        }   
+        }
     }
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -37,7 +37,7 @@ function LoginPage() {
     };
 
     return (
-        <div>
+        <div className='form-group'>
             <h1>Login</h1>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <input
