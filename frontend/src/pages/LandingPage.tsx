@@ -1,5 +1,16 @@
+import { useNavigate } from 'react-router-dom';
+
 function LandingPage() {
-    return 0;
-};
+  const navigate = useNavigate();
+
+  return (
+    <div>
+      <h1>Welcome to Presto 🪄</h1>
+      <p>The lightweight, modern presentation tool.</p>
+      <button onClick={() => navigate('/login')}>Login</button>
+      <button onClick={() => navigate('/register')}>Register</button>
+    </div>
+  );
+}
 
 export default LandingPage;
