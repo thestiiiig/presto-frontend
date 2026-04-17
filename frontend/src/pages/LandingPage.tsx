@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { Button } from '@chakra-ui/react';
 
 function LandingPage() {
   const navigate = useNavigate();
@@ -7,8 +8,8 @@ function LandingPage() {
     <div>
       <h1>Welcome to Presto 🪄</h1>
       <p>The lightweight, modern presentation tool.</p>
-      <button onClick={() => navigate('/login')}>Login</button>
-      <button onClick={() => navigate('/register')}>Register</button>
+      <Button onClick={() => navigate('/login')}>Login</Button>
+      <Button onClick={() => navigate('/register')}>Register</Button>
     </div>
   );
 }
