@@ -1,4 +1,11 @@
 import { useNavigate } from 'react-router-dom';
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Text,
+} from '@chakra-ui/react';
 
 function DashboardPage() {
   const navigate = useNavigate();
@@ -23,15 +30,31 @@ function DashboardPage() {
   };
 
   return (
-    <div>
-      <header>
-        <h1>Presto 🪄</h1>
-        <button onClick={handleLogout}>Logout</button>
-      </header>
-      <main>
-        <p>Welcome to your dashboard</p>
-      </main>
-    </div>
+    <Box minH="100vh" bg="gray.50">
+      <Flex
+        as="header"
+        px={6}
+        py={4}
+        bg="white"
+        boxShadow="sm"
+        justify="space-between"
+        align="center"
+      >
+        <Heading size="md">Presto 🪄</Heading>
+        <Button
+          colorPalette="red"
+          variant="outline"
+          size="sm"
+          onClick={handleLogout}
+        >
+          Logout
+        </Button>
+      </Flex>
+
+      <Box as="main" p={8}>
+        <Text color="gray.600">Welcome to your dashboard</Text>
+      </Box>
+    </Box>
   );
 }
 

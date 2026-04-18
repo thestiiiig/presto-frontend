@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ErrorPopup from '../components/ErrorPopup';
 import {
   Box,
   Button,
@@ -58,6 +59,7 @@ function RegisterPage() {
 
     return (
         <Center minH="100vh" bg="gray.50">
+            {error && <ErrorPopup message={error} onClose={() => setError('')} />}
             <Box
                 p={8}
                 w="100%"
@@ -67,62 +69,56 @@ function RegisterPage() {
                 boxShadow="lg"
             >
                 <VStack gap={4}>
-                <Heading>Register</Heading>
+                    <Heading>Register</Heading>
 
-                {error && (
-                    <Text color="red.500" fontSize="sm">
-                    {error}
-                    </Text>
-                )}
+                    <Input
+                        type="text"
+                        placeholder="Name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                    />
+                    <Input
+                        type="email"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                    />
+                    <Input
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                    />
+                    <Input
+                        type="password"
+                        placeholder="Confirm Password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                    />
 
-                <Input
-                    type="text"
-                    placeholder="Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                />
-                <Input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                />
-                <Input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                />
-                <Input
-                    type="password"
-                    placeholder="Confirm Password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                />
-
-                <Button
-                    w="full"
-                    colorPalette="blue"
-                    onClick={handleRegister}
-                >
-                    Register
-                </Button>
-
-                <Text fontSize="sm">
-                    Already have an account?{' '}
-                    <Text
-                    as="span"
-                    color="blue.500"
-                    cursor="pointer"
-                    onClick={() => navigate('/login')}
+                    <Button
+                        w="full"
+                        colorPalette="blue"
+                        onClick={handleRegister}
                     >
-                    Login
+                        Register
+                    </Button>
+
+                    <Text fontSize="sm">
+                        Already have an account?{' '}
+                        <Text
+                        as="span"
+                        color="blue.500"
+                        cursor="pointer"
+                        onClick={() => navigate('/login')}
+                        >
+                        Login
+                        </Text>
                     </Text>
-                </Text>
 
                 </VStack>
             </Box>
