@@ -232,31 +232,44 @@ function EditPresentationPage() {
 
         {/* Controls below canvas */}
         <Flex justify="center" align="center" gap={4} mt={4}>
-          <Button
-            onClick={() => setCurrentSlideIndex((prev) => prev - 1)}
-            disabled={isFirst}
-            colorPalette={isFirst ? 'gray' : 'blue'}
-            variant={isFirst ? 'outline' : 'solid'}
-            size="sm"
-          >
-            ‹
-          </Button>
-          <Button
-            onClick={handleAddSlide}
-            colorPalette="blue"
-            size="sm"
-          >
-            +
-          </Button>
-          <Button
-            onClick={() => setCurrentSlideIndex((prev) => prev + 1)}
-            disabled={isLast}
-            colorPalette={isLast ? 'gray' : 'blue'}
-            variant={isLast ? 'outline' : 'solid'}
-            size="sm"
-          >
-            ›
-          </Button>
+            {/* Left group - navigation */}
+            <Flex gap={4} align="center">
+                <Button
+                onClick={() => setCurrentSlideIndex((prev) => prev - 1)}
+                disabled={isFirst}
+                colorPalette={isFirst ? 'gray' : 'blue'}
+                variant={isFirst ? 'outline' : 'solid'}
+                size="sm"
+                >
+                ‹
+                </Button>
+                <Button
+                onClick={handleAddSlide}
+                colorPalette="blue"
+                size="sm"
+                >
+                +
+                </Button>
+                <Button
+                onClick={() => setCurrentSlideIndex((prev) => prev + 1)}
+                disabled={isLast}
+                colorPalette={isLast ? 'gray' : 'blue'}
+                variant={isLast ? 'outline' : 'solid'}
+                size="sm"
+                >
+                ›
+                </Button>
+            </Flex>
+
+            {/* Right group - destructive action */}
+            <Button
+                colorPalette="red"
+                variant="outline"
+                size="sm"
+                //onClick={handleDeleteSlide}
+            >
+                🗑 Delete Slide
+            </Button>
         </Flex>
 
       </Box>
