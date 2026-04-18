@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Box,
@@ -102,6 +102,24 @@ function EditPresentationPage() {
             setError('Failed to add slide.');
         }
     };
+
+    // Keyboard navigation 
+    const handleKeyDown = useCallback((e: KeyboardEvent) => {
+        if (!presentation) return;
+        if (e.key === 'ArrowLeft' && currentSlideIndex > 0) {
+            setCurrentSlideIndex((prev) => prev - 1);
+        }
+        if (e.key === 'ArrowRight' && currentSlideIndex < presentation.slides.length - 1) {
+            setCurrentSlideIndex((prev) => prev + 1);
+        }
+    }, [currentSlideIndex, presentation]);
+
+    // Attach and detach keyboard listener
+    useEffect(() => {
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [handleKeyDown]);
+
     const handleDelete = async () => {
         const token = localStorage.getItem('token');
         try {
