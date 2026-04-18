@@ -1,19 +1,47 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
   Flex,
   Heading,
+  SimpleGrid,
   Text,
 } from '@chakra-ui/react';
 import ErrorPopup from '../components/ErrorPopup';
 import NewPresentationModal from '../components/NewPresentationModal';
+import PresentationCard from '../components/PresentationCard';
+
+interface Presentation {
+  id: string;
+  name: string;
+  description: string;
+  thumbnail: string;
+  slides: object[];
+}
 
 function DashboardPage() {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
+  const [presentations, setPresentations] = useState<Presentation[]>([]);
   const [error, setError] = useState('');
+
+  // Fetch presentations on load
+  useEffect(() => {
+    const fetchPresentations = async () => {
+      const token = localStorage.getItem('token');
+      try {
+        const res = await fetch('http://localhost:5005/store', {
+          headers: { 'Authorization': `Bearer ${token}` },
+        });
+        const data = await res.json();
+        setPresentations(data.store?.presentations || []);
+      } catch {
+        setError('Failed to load presentations.');
+      }
+    };
+    fetchPresentations();
+  }, []);
 
   const handleLogout = async () => {
     const token = localStorage.getItem('token');
@@ -50,14 +78,15 @@ function DashboardPage() {
       const getData = await getRes.json();
       const existingPresentations = getData.store?.presentations || [];
 
-      // Add new presentation
-      const newPresentation = {
+      const newPresentation: Presentation = {
         id: Date.now().toString(),
         name: name.trim(),
         description: description.trim(),
         thumbnail: thumbnail.trim(),
         slides: [{}],
       };
+
+      const updatedPresentations = [...existingPresentations, newPresentation];
 
       const putRes = await fetch('http://localhost:5005/store', {
         method: 'PUT',
@@ -66,7 +95,7 @@ function DashboardPage() {
           'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
-          store: { presentations: [...existingPresentations, newPresentation] },
+          store: { presentations: updatedPresentations },
         }),
       });
 
@@ -75,6 +104,7 @@ function DashboardPage() {
         return;
       }
 
+      setPresentations(updatedPresentations);
       setShowModal(false);
     } catch {
       setError('Something went wrong. Please try again.');
@@ -110,7 +140,22 @@ function DashboardPage() {
             + New Presentation
           </Button>
         </Flex>
-        <Text color="gray.500">No presentations yet. Create one to get started!</Text>
+
+        {presentations.length === 0 ? (
+          <Text color="gray.500">No presentations yet. Create one to get started!</Text>
+        ) : (
+          <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} gap={4}>
+            {presentations.map((p) => (
+              <PresentationCard
+                key={p.id}
+                name={p.name}
+                description={p.description}
+                thumbnail={p.thumbnail}
+                slideCount={p.slides.length}
+              />
+            ))}
+          </SimpleGrid>
+        )}
       </Box>
 
       {showModal && (
