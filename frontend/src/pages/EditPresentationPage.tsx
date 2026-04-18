@@ -31,6 +31,7 @@ function EditPresentationPage() {
     const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
+    const [showDeleteSlideConfirm, setShowDeleteSlideConfirm] = useState(false);
     const [error, setError] = useState('');
     
     // Fetch the specific presentation on load
@@ -159,25 +160,16 @@ function EditPresentationPage() {
 
     const handleDeleteSlide = async () => {
         if (!presentation) return;
-
-        // Only slide — show error
-        if (presentation.slides.length === 1) {
-            setError('Cannot delete the only slide. Delete the presentation instead.');
-            return;
-        }
-
         const updatedSlides = presentation.slides.filter((_, i) => i !== currentSlideIndex);
         const updated = { ...presentation, slides: updatedSlides };
-
         try {
             await savePresentation(updated);
             setPresentation(updated);
-            // Go to previous slide if possible, otherwise stay at 0
             setCurrentSlideIndex((prev) => (prev > 0 ? prev - 1 : 0));
         } catch {
             setError('Failed to delete slide.');
         }
-        };
+    };
 
     const currentSlide = presentation?.slides[currentSlideIndex];
     const totalSlides = presentation?.slides.length || 0;
@@ -257,27 +249,27 @@ function EditPresentationPage() {
             {/* Left group - navigation */}
             <Flex gap={4} align="center">
                 <Button
-                onClick={() => setCurrentSlideIndex((prev) => prev - 1)}
-                disabled={isFirst}
-                colorPalette={isFirst ? 'gray' : 'blue'}
-                variant={isFirst ? 'outline' : 'solid'}
-                size="sm"
+                    onClick={() => setCurrentSlideIndex((prev) => prev - 1)}
+                    disabled={isFirst}
+                    colorPalette={isFirst ? 'gray' : 'blue'}
+                    variant={isFirst ? 'outline' : 'solid'}
+                    size="sm"
                 >
                 ‹
                 </Button>
                 <Button
-                onClick={handleAddSlide}
-                colorPalette="blue"
-                size="sm"
+                    onClick={handleAddSlide}
+                    colorPalette="blue"
+                    size="sm"
                 >
                 +
                 </Button>
                 <Button
-                onClick={() => setCurrentSlideIndex((prev) => prev + 1)}
-                disabled={isLast}
-                colorPalette={isLast ? 'gray' : 'blue'}
-                variant={isLast ? 'outline' : 'solid'}
-                size="sm"
+                    onClick={() => setCurrentSlideIndex((prev) => prev + 1)}
+                    disabled={isLast}
+                    colorPalette={isLast ? 'gray' : 'blue'}
+                    variant={isLast ? 'outline' : 'solid'}
+                    size="sm"
                 >
                 ›
                 </Button>
@@ -288,7 +280,13 @@ function EditPresentationPage() {
                 colorPalette="red"
                 variant="outline"
                 size="sm"
-                onClick={handleDeleteSlide}
+                onClick={() => {
+                    if (presentation && presentation.slides.length === 1) {
+                    setError('Cannot delete the only slide. Delete the presentation instead.');
+                    return;
+                    }
+                    setShowDeleteSlideConfirm(true);
+                }}
             >
                 🗑 Delete Slide
             </Button>
@@ -311,7 +309,17 @@ function EditPresentationPage() {
             onSave={handleEditSave}
         />
       )}
-
+      {showDeleteSlideConfirm && (
+        <ConfirmModal
+            message="Are you sure you want to delete this slide?"
+            onConfirm={() => {
+            setShowDeleteSlideConfirm(false);
+            handleDeleteSlide();
+            }}
+            onCancel={() => setShowDeleteSlideConfirm(false)}
+        />
+      )}
+    
     </Box>
   );
 }
