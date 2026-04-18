@@ -11,18 +11,33 @@ import ConfirmModal from '../components/ConfirmModal';
 import EditPresentationModal from '../components/EditPresentationModal';
 import AddTextModal from "../components/AddTextModal";
 
+interface TextElementData {
+    id: string;
+    type: 'text';
+    text: string;
+    fontSize: number;
+    color: string;
+    width: number;
+    height: number;
+    x: number;
+    y: number;
+    zIndex: number;
+}
+
+type SlideElement = TextElementData;
+
 interface Slide {
     id: string;
-    elements: object[];
+    elements: SlideElement[];
     background: string;
 }
 
 interface Presentation {
-  id: string;
-  name: string;
-  description: string;
-  thumbnail: string;
-  slides: Slide[];
+    id: string;
+    name: string;
+    description: string;
+    thumbnail: string;
+    slides: Slide[];
 }
 
 function EditPresentationPage() {
@@ -106,7 +121,7 @@ function EditPresentationPage() {
         }
     };
 
-    // Keyboard navigation 
+    // Keyboard navigation
     const handleKeyDown = useCallback((e: KeyboardEvent) => {
         if (!presentation) return;
         if (e.key === 'ArrowLeft' && currentSlideIndex > 0) {
@@ -170,6 +185,36 @@ function EditPresentationPage() {
             setCurrentSlideIndex((prev) => (prev > 0 ? prev - 1 : 0));
         } catch {
             setError('Failed to delete slide.');
+        }
+    };
+
+    const handleAddText = async (text: string, fontSize: number, color: string, width: number, height: number) => {
+        if (!presentation) return;
+        const currentSlide = presentation.slides[currentSlideIndex];
+        const newElement: TextElementData = {
+            id: `text-${Date.now()}`,
+            type: 'text',
+            text,
+            fontSize,
+            color,
+            width,
+            height,
+            x: 0,
+            y: 0,
+            zIndex: currentSlide.elements.length + 1,
+        };
+        const updatedSlides = presentation.slides.map((slide, i) =>
+            i === currentSlideIndex
+            ? { ...slide, elements: [...slide.elements, newElement] }
+            : slide
+        );
+        const updated = { ...presentation, slides: updatedSlides };
+        try {
+            await savePresentation(updated);
+            setPresentation(updated);
+            setShowAddText(false);
+        } catch {
+            setError('Failed to add text element.');
         }
     };
 
@@ -334,10 +379,7 @@ function EditPresentationPage() {
       {showAddText && (
         <AddTextModal
             onClose={() => setShowAddText(false)}
-            onAdd={(text, fontSize, color, width, height) => {
-            console.log(text, fontSize, color, width, height);
-            setShowAddText(false);
-            }}
+            onAdd={handleAddText}
         />
       )}
     </Box>
