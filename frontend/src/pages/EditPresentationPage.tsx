@@ -21,7 +21,7 @@ interface Presentation {
   name: string;
   description: string;
   thumbnail: string;
-  slides: object[];
+  slides: Slide[];
 }
 
 function EditPresentationPage() {
@@ -146,37 +146,21 @@ function EditPresentationPage() {
     };
 
     const handleEditSave = async (newName: string, newThumbnail: string) => {
-        const token = localStorage.getItem('token');
+        if (!presentation) return;
+        const updated = { ...presentation, name: newName, thumbnail: newThumbnail };
         try {
-            const res = await fetch('http://localhost:5005/store', {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            const data = await res.json();
-            const all: Presentation[] = data.store?.presentations || [];
-
-            // Update just this presentation's name and thumbnail
-            const updated = all.map((p) =>
-                p.id === id ? { ...p, name: newName, thumbnail: newThumbnail } : p
-            );
-
-            await fetch('http://localhost:5005/store', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({ store: { presentations: updated } }),
-            });
-
-            // Update local state so header reflects new name immediately
-            setPresentation((prev) =>
-                prev ? { ...prev, name: newName, thumbnail: newThumbnail } : prev
-            );
+            await savePresentation(updated);
+            setPresentation(updated);
             setShowEditModal(false);
         } catch {
             setError('Failed to update presentation.');
         }
     }
+
+    const currentSlide = presentation?.slides[currentSlideIndex];
+    const totalSlides = presentation?.slides.length || 0;
+    const isFirst = currentSlideIndex === 0;
+    const isLast = currentSlideIndex === totalSlides - 1;
 
     return (
     <Box minH="100vh" bg="gray.50">
@@ -214,8 +198,67 @@ function EditPresentationPage() {
       </Flex>
 
       <Box p={8}>
-        {error && <Text color="red.500">{error}</Text>}
-        <Text color="gray.400">Slide editor coming soon...</Text>
+        {error && <Text color="red.500" mb={4}>{error}</Text>}
+
+        {/* Slide canvas - 16:9 ratio using paddingTop trick */}
+        <Box
+          position="relative"
+          w="100%"
+          paddingTop="56.25%"
+          bg={currentSlide?.background || 'white'}
+          borderRadius="lg"
+          boxShadow="md"
+          overflow="hidden"
+          border="1px solid"
+          borderColor="gray.200"
+        >
+          {/* Inner content sits inside absolute box to fill canvas */}
+          <Box
+            position="absolute"
+            inset={0}
+          >
+            {/* Slide number - bottom left */}
+            <Text
+              position="absolute"
+              bottom={3}
+              left={3}
+              fontSize="sm"
+              color="gray.400"
+            >
+              {currentSlideIndex + 1}
+            </Text>
+          </Box>
+        </Box>
+
+        {/* Controls below canvas */}
+        <Flex justify="center" align="center" gap={4} mt={4}>
+          <Button
+            onClick={() => setCurrentSlideIndex((prev) => prev - 1)}
+            disabled={isFirst}
+            colorPalette={isFirst ? 'gray' : 'blue'}
+            variant={isFirst ? 'outline' : 'solid'}
+            size="sm"
+          >
+            ‹
+          </Button>
+          <Button
+            onClick={handleAddSlide}
+            colorPalette="blue"
+            size="sm"
+          >
+            +
+          </Button>
+          <Button
+            onClick={() => setCurrentSlideIndex((prev) => prev + 1)}
+            disabled={isLast}
+            colorPalette={isLast ? 'gray' : 'blue'}
+            variant={isLast ? 'outline' : 'solid'}
+            size="sm"
+          >
+            ›
+          </Button>
+        </Flex>
+
       </Box>
 
       {showDeleteConfirm && (
