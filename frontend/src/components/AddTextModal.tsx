@@ -6,14 +6,21 @@ import {
 interface AddTextModalProps {
   onClose: () => void;
   onAdd: (text: string, fontSize: number, color: string, width: number, height: number) => void;
+  initialValues?: {
+    text: string;
+    fontSize: number;
+    color: string;
+    width: number;
+    height: number;
+  };
 }
 
-function AddTextModal({ onClose, onAdd }: AddTextModalProps) {
-  const [text, setText] = useState('');
-  const [fontSize, setFontSize] = useState('1');
-  const [color, setColor] = useState('#000000');
-  const [width, setWidth] = useState('30');
-  const [height, setHeight] = useState('20');
+function AddTextModal({ onClose, onAdd, initialValues }: AddTextModalProps) {
+  const [text, setText] = useState(initialValues?.text || '');
+  const [fontSize, setFontSize] = useState(String(initialValues?.fontSize || '1'));
+  const [color, setColor] = useState(initialValues?.color || '#000000');
+  const [width, setWidth] = useState(String(initialValues?.width || '30'));
+  const [height, setHeight] = useState(String(initialValues?.height || '20'));
 
   const handleAdd = () => {
     if (!text.trim()) return;
@@ -38,7 +45,7 @@ function AddTextModal({ onClose, onAdd }: AddTextModalProps) {
     >
       <Box bg="white" borderRadius="xl" boxShadow="lg" p={6} w="100%" maxW="420px" mx={4}>
         <VStack gap={4}>
-          <Heading size="md">Add Text Box</Heading>
+          <Heading size="md">{initialValues ? 'Edit Text Box' : 'Add Text Box'}</Heading>
 
           <Box w="full">
             <Text fontSize="sm" color="gray.600" mb={1}>Text content</Text>
@@ -104,7 +111,9 @@ function AddTextModal({ onClose, onAdd }: AddTextModalProps) {
           </Flex>
 
           <Flex gap={3} w="full">
-            <Button colorPalette="blue" onClick={handleAdd}>Add</Button>
+            <Button colorPalette="blue" onClick={handleAdd}>
+                {initialValues ? 'Save' : 'Add'}
+            </Button>
             <Button variant="outline" onClick={onClose}>Cancel</Button>
           </Flex>
         </VStack>
