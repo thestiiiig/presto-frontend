@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Box, 
-  Button, 
-  Center, 
-  Heading, 
-  Input, 
-  Text, 
-  VStack 
+import {
+  Box,
+  Button,
+  Center,
+  Heading,
+  Input,
+  Text,
+  VStack
 } from '@chakra-ui/react';
+import ErrorPopup from '../components/ErrorPopup';
 
 function LoginPage() {
     const navigate = useNavigate();
@@ -47,6 +48,7 @@ function LoginPage() {
 
     return (
         <Center minH="100vh" bg="gray.50">
+            {error && <ErrorPopup message={error} onClose={() => setError('')} />}
             <Box
                 p={8}
                 w="100%"
@@ -58,12 +60,6 @@ function LoginPage() {
 
                 <VStack gap={4}>
                     <Heading>Login</Heading>
-
-                    {error && (
-                        <Text color="red.500" fontSize="sm">
-                        {error}
-                        </Text>
-                    )}
 
                     <Input
                         type="email"
@@ -102,9 +98,8 @@ function LoginPage() {
                     </Text>
 
                 </VStack>
-            </Box>    
+            </Box>
         </Center>
-
     );
 }
 
