@@ -9,6 +9,7 @@ import {
 } from '@chakra-ui/react';
 import ConfirmModal from '../components/ConfirmModal';
 import EditPresentationModal from '../components/EditPresentationModal';
+import AddTextModal from "../components/AddTextModal";
 
 interface Slide {
     id: string;
@@ -32,8 +33,9 @@ function EditPresentationPage() {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [showDeleteSlideConfirm, setShowDeleteSlideConfirm] = useState(false);
+    const [showAddText, setShowAddText] = useState(false);
     const [error, setError] = useState('');
-    
+
     // Fetch the specific presentation on load
     useEffect(() => {
         const fetchPresentation = async () => {
@@ -195,7 +197,7 @@ function EditPresentationPage() {
         >
           ← Back
         </Button>
-        <Heading 
+        <Heading
             size="md"
             cursor="pointer"
             onClick={() => setShowEditModal(true)}
@@ -213,7 +215,16 @@ function EditPresentationPage() {
 
       <Box p={8}>
         {error && <Text color="red.500" mb={4}>{error}</Text>}
-
+        <Flex gap={2} mb={4}>
+          <Button
+            size="sm"
+            colorPalette="blue"
+            variant="outline"
+            onClick={() => setShowAddText(true)}
+          >
+            + Text
+          </Button>
+        </Flex>
         {/* Slide canvas - 16:9 ratio using paddingTop trick */}
         <Box
           position="relative"
@@ -319,7 +330,16 @@ function EditPresentationPage() {
             onCancel={() => setShowDeleteSlideConfirm(false)}
         />
       )}
-    
+
+      {showAddText && (
+        <AddTextModal
+            onClose={() => setShowAddText(false)}
+            onAdd={(text, fontSize, color, width, height) => {
+            console.log(text, fontSize, color, width, height);
+            setShowAddText(false);
+            }}
+        />
+      )}
     </Box>
   );
 }
