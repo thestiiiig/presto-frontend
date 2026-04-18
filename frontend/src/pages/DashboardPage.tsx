@@ -148,6 +148,7 @@ function DashboardPage() {
             {presentations.map((p) => (
               <PresentationCard
                 key={p.id}
+                id={p.id}
                 name={p.name}
                 description={p.description}
                 thumbnail={p.thumbnail}

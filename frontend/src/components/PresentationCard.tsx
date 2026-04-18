@@ -1,13 +1,17 @@
 import { Box, Text } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 
 interface PresentationCardProps {
+  id: string;
   name: string;
   description: string;
   thumbnail: string;
   slideCount: number;
 }
 
-function PresentationCard({ name, description, thumbnail, slideCount }: PresentationCardProps) {
+function PresentationCard({ id, name, description, thumbnail, slideCount }: PresentationCardProps) {
+  const navigate = useNavigate();
+  
   return (
     <Box
       bg="white"
@@ -17,6 +21,7 @@ function PresentationCard({ name, description, thumbnail, slideCount }: Presenta
       cursor="pointer"
       w="100%"
       minW="100px"
+      onClick={() => navigate(`/presentation/${id}`)}
     >
       {/* Thumbnail - 2:1 ratio */}
       <Box
