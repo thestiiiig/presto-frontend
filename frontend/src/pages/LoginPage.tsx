@@ -1,5 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { 
+  Box, 
+  Button, 
+  Center, 
+  Heading, 
+  Input, 
+  Text, 
+  VStack 
+} from '@chakra-ui/react';
 
 function LoginPage() {
     const navigate = useNavigate();
@@ -37,31 +46,64 @@ function LoginPage() {
     };
 
     return (
-        <div className='form-group'>
-            <h1>Login</h1>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onKeyDown={handleKeyDown}
-            />
-            <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onKeyDown={handleKeyDown}
-            />
-            <button onClick={handleLogin}>Login</button>
-            <p>
-                Don't have an account?{' '}
-                <span onClick={() => navigate('/register')} style={{ cursor: 'pointer', color: 'blue' }}>
-                Register
-                </span>
-            </p>
-            </div>
+        <Center minH="100vh" bg="gray.50">
+            <Box
+                p={8}
+                w="100%"
+                maxW="400px"
+                bg="white"
+                borderRadius="xl"
+                boxShadow="lg"
+            >
+
+                <VStack gap={4}>
+                    <Heading>Login</Heading>
+
+                    {error && (
+                        <Text color="red.500" fontSize="sm">
+                        {error}
+                        </Text>
+                    )}
+
+                    <Input
+                        type="email"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                    />
+
+                    <Input
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                    />
+
+                    <Button
+                        w="full"
+                        colorPalette="blue"
+                        onClick={handleLogin}
+                    >
+                        Login
+                    </Button>
+
+                    <Text fontSize="sm">
+                        Don't have an account?{' '}
+                        <Text
+                        as="span"
+                        color="blue.500"
+                        cursor="pointer"
+                        onClick={() => navigate('/register')}
+                        >
+                        Register
+                        </Text>
+                    </Text>
+
+                </VStack>
+            </Box>    
+        </Center>
 
     );
 }
