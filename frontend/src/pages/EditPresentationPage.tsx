@@ -10,6 +10,12 @@ import {
 import ConfirmModal from '../components/ConfirmModal';
 import EditPresentationModal from '../components/EditPresentationModal';
 
+interface Slide {
+    id: string;
+    elements: object[];
+    background: string;
+}
+
 interface Presentation {
   id: string;
   name: string;
@@ -22,16 +28,17 @@ function EditPresentationPage() {
     const { id } = useParams();
     const navigate = useNavigate();
     const [presentation, setPresentation] = useState<Presentation | null>(null);
+    const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-    const [error, setError] = useState('');
     const [showEditModal, setShowEditModal] = useState(false);
+    const [error, setError] = useState('');
     
     // Fetch the specific presentation on load
     useEffect(() => {
         const fetchPresentation = async () => {
             const token = localStorage.getItem('token');
             try {
-                    const res = await fetch('http://localhost:5005/store', {
+                const res = await fetch('http://localhost:5005/store', {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 const data = await res.json();
@@ -39,9 +46,15 @@ function EditPresentationPage() {
                 const found = all.find((p) => p.id === id);
                 if (!found) {
                     setError('Presentation not found.');
-                    return;
+                return;
                 }
-                setPresentation(found);
+                // new Slide structure
+                const migratedSlides: Slide[] = found.slides.map((s, i) => ({
+                    id: (s as Slide).id || `slide-${i}-${Date.now()}`,
+                    elements: (s as Slide).elements || [],
+                    background: (s as Slide).background || '',
+                }));
+                setPresentation({ ...found, slides: migratedSlides });
             } catch {
                 setError('Failed to load presentation.');
             }
@@ -49,6 +62,46 @@ function EditPresentationPage() {
         fetchPresentation();
     }, [id]);
 
+    // Save entire presentation back to store
+    const savePresentation = async (updated: Presentation) => {
+        const token = localStorage.getItem('token');
+        const res = await fetch('http://localhost:5005/store', {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+        const all: Presentation[] = data.store?.presentations || [];
+        const updatedAll = all.map((p) => p.id === id ? updated : p);
+        await fetch('http://localhost:5005/store', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+            body: JSON.stringify({ store: { presentations: updatedAll } }),
+        });
+    };
+
+    // Add a new slide at the end
+    const handleAddSlide = async () => {
+        if (!presentation) return;
+        const newSlide: Slide = {
+            id: `slide-${Date.now()}`,
+            elements: [],
+            background: '',
+        };
+        const updated = {
+            ...presentation,
+            slides: [...presentation.slides, newSlide],
+        };
+        try {
+            await savePresentation(updated);
+            setPresentation(updated);
+            // Navigate to the new slide
+            setCurrentSlideIndex(updated.slides.length - 1);
+        } catch {
+            setError('Failed to add slide.');
+        }
+    };
     const handleDelete = async () => {
         const token = localStorage.getItem('token');
         try {
