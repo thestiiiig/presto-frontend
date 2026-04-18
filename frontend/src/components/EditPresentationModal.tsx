@@ -19,6 +19,10 @@ function EditPresentationModal({ initialName, initialThumbnail, onClose, onSave 
   const [name, setName] = useState(initialName);
   const [thumbnail, setThumbnail] = useState(initialThumbnail);
 
+  const handleSave = () => {
+    if (!name.trim()) return;
+    onSave(name, thumbnail);
+  };
 
   return (
     <Box
@@ -39,7 +43,30 @@ function EditPresentationModal({ initialName, initialThumbnail, onClose, onSave 
         maxW="420px"
         mx={4}
       >
-
+        <VStack gap={4}>
+          <Heading size="md">Edit Presentation</Heading>
+          <Input
+            placeholder="Presentation name *"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <Input
+            placeholder="Thumbnail URL (optional)"
+            value={thumbnail}
+            onChange={(e) => setThumbnail(e.target.value)}
+          />
+          <Flex gap={3} w="full">
+            <Button
+              colorPalette="blue"
+              onClick={handleSave}
+            >
+              Save
+            </Button>
+            <Button variant="outline" onClick={onClose}>
+              Cancel
+            </Button>
+          </Flex>
+        </VStack>
       </Box>
     </Box>
   );
