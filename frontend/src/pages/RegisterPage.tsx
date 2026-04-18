@@ -1,5 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {
+  Box,
+  Button,
+  Center,
+  Heading,
+  Input,
+  Text,
+  VStack
+} from '@chakra-ui/react';
 
 function RegisterPage() {
     const navigate = useNavigate();
@@ -48,45 +57,76 @@ function RegisterPage() {
     };
 
     return (
-        <div className="form-group">
-            <h1>Register</h1>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            <input
-                type="text"
-                placeholder="Name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                onKeyDown={handleKeyDown}
-            />
-            <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onKeyDown={handleKeyDown}
-            />
-            <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onKeyDown={handleKeyDown}
-            />
-            <input
-                type="password"
-                placeholder="Confirm Password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                onKeyDown={handleKeyDown}
-            />
-            <button onClick={handleRegister}>Register</button>
-            <p>
-                Already have an account?{' '}
-                <span onClick={() => navigate('/login')} style={{ cursor: 'pointer', color: 'blue' }}>
+        <Center minH="100vh" bg="gray.50">
+            <Box
+                p={8}
+                w="100%"
+                maxW="400px"
+                bg="white"
+                borderRadius="xl"
+                boxShadow="lg"
+            >
+                <VStack gap={4}>
+                <Heading>Register</Heading>
+
+                {error && (
+                    <Text color="red.500" fontSize="sm">
+                    {error}
+                    </Text>
+                )}
+
+                <Input
+                    type="text"
+                    placeholder="Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                />
+                <Input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                />
+                <Input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                />
+                <Input
+                    type="password"
+                    placeholder="Confirm Password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                />
+
+                <Button
+                    w="full"
+                    colorPalette="blue"
+                    onClick={handleRegister}
+                >
+                    Register
+                </Button>
+
+                <Text fontSize="sm">
+                    Already have an account?{' '}
+                    <Text
+                    as="span"
+                    color="blue.500"
+                    cursor="pointer"
+                    onClick={() => navigate('/login')}
+                    >
                     Login
-                </span>
-            </p>
-        </div>
+                    </Text>
+                </Text>
+
+                </VStack>
+            </Box>
+        </Center>
     );
 }
 
