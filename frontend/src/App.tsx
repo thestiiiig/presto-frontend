@@ -12,7 +12,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/Register" element={<RegisterPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route path='/dashboard' element={<DashboardPage />} />
         <Route path="/presentation/:id" element={<EditPresentationPage />} />
       </Routes>
@@ -21,4 +21,3 @@ function App() {
 }
 
 export default App;
-
