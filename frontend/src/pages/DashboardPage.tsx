@@ -35,7 +35,7 @@ function DashboardPage() {
           headers: { 'Authorization': `Bearer ${token}` },
         });
         const data = await res.json();
-        setPresentations(data.store?.presentations || []);
+        setPresentations((data.store?.presentations || []).reverse());
       } catch {
         setError('Failed to load presentations.');
       }
@@ -104,7 +104,7 @@ function DashboardPage() {
         return;
       }
 
-      setPresentations(updatedPresentations);
+      setPresentations([...updatedPresentations].reverse());
       setShowModal(false);
     } catch {
       setError('Something went wrong. Please try again.');
