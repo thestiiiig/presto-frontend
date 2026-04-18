@@ -157,6 +157,28 @@ function EditPresentationPage() {
         }
     }
 
+    const handleDeleteSlide = async () => {
+        if (!presentation) return;
+
+        // Only slide — show error
+        if (presentation.slides.length === 1) {
+            setError('Cannot delete the only slide. Delete the presentation instead.');
+            return;
+        }
+
+        const updatedSlides = presentation.slides.filter((_, i) => i !== currentSlideIndex);
+        const updated = { ...presentation, slides: updatedSlides };
+
+        try {
+            await savePresentation(updated);
+            setPresentation(updated);
+            // Go to previous slide if possible, otherwise stay at 0
+            setCurrentSlideIndex((prev) => (prev > 0 ? prev - 1 : 0));
+        } catch {
+            setError('Failed to delete slide.');
+        }
+        };
+
     const currentSlide = presentation?.slides[currentSlideIndex];
     const totalSlides = presentation?.slides.length || 0;
     const isFirst = currentSlideIndex === 0;
@@ -266,7 +288,7 @@ function EditPresentationPage() {
                 colorPalette="red"
                 variant="outline"
                 size="sm"
-                //onClick={handleDeleteSlide}
+                onClick={handleDeleteSlide}
             >
                 🗑 Delete Slide
             </Button>
