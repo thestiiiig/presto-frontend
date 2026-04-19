@@ -22,6 +22,7 @@ function DraggableElement({
 
   const [isSelected, setIsSelected] = useState(false);
 
+
   const isDragging = useRef(false);
   const startMouse = useRef({ x: 0, y: 0 });
   const startPos = useRef({ x, y });
@@ -32,7 +33,82 @@ function DraggableElement({
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button !== 0) return;
     e.stopPropagation();
+
+    clickCount.current += 1;
+
+    if (clickCount.current === 1) {
+      // Start timer 
+      // if second click comes within 500ms its double click
+      clickTimer.current = setTimeout(() => {
+        clickCount.current = 0;
+        // Single click select  element
+        setIsSelected(true);
+      }, 500);
+    } else if (clickCount.current === 2) {
+      // double click clear timer, trigger edit
+      if (clickTimer.current) clearTimeout(clickTimer.current);
+      clickCount.current = 0;
+      setIsSelected(false);
+      onDoubleClick(id);
+    }
+
+    isDragging.current = true;
+    startMouse.current = { x: e.clientX, y: e.clientY };
+    startPos.current = { x, y };
   };
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (!isDragging.current) return;
+    if (!slideRef.current) return;
+
+    // slide dimensions in pixels
+    const rect = slideRef.current.getBoundingClientRect();
+
+    // Calculate how much mouse has moved in pixels
+    const deltaPxX = e.clientX - startMouse.current.x;
+    const deltaPxY = e.clientY - startMouse.current.y;
+
+    // Convert to percentage
+    const deltaPercentX = (deltaPxX / rect.width) * 100;
+    const deltaPercentY = (deltaPxY / rect.height) * 100;
+
+    // Calculate new position
+    let newX = startPos.current.x + deltaPercentX;
+    let newY = startPos.current.y + deltaPercentY;
+
+    // stays within slide bounds
+    newX = Math.max(0, Math.min(newX, 100 - width));
+    newY = Math.max(0, Math.min(newY, 100 - height));
+
+    onMove(id, newX, newY);
+  }, [id, width, height, slideRef, onMove]);
+
+  const handleMouseUp = useCallback(() => {
+    isDragging.current = false;
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [handleMouseMove, handleMouseUp]);
+
+  useEffect(() => {
+    const handleClickOutside = () => setIsSelected(false);
+    window.addEventListener('click', handleClickOutside);
+    return () => window.removeEventListener('click', handleClickOutside);
+  }, []);
+
+  const corners = [
+    { top: -3, left: -3 },
+    { top: -3, right: -3 },
+    { bottom: -3, left: -3 },
+    { bottom: -3, right: -3 },
+  ];
+
   return (
     <Box
       position="absolute"
@@ -48,9 +124,25 @@ function DraggableElement({
         onRightClick(id);
       }}
     >
-      {/* The actual element content */}
       {children}
 
+      {isSelected && corners.map((corner, i) => (
+        <Box
+          key={i}
+          position="absolute"
+          width="8px"
+          height="8px"
+          bg="blue.500"
+          border="1px solid white"
+          style={{
+            top: corner.top !== undefined ? `${corner.top}px` : undefined,
+            bottom: corner.bottom !== undefined ? `${corner.bottom}px` : undefined,
+            left: corner.left !== undefined ? `${corner.left}px` : undefined,
+            right: corner.right !== undefined ? `${corner.right}px` : undefined,
+            cursor: 'grab',
+          }}
+        />
+      ))}
     </Box>
   );
 }
