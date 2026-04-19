@@ -14,22 +14,17 @@ interface ImageElementProps {
 }
 
 function ImageElement({
-    id, src, alt, width, height, x, y, zIndex,
+    id, src, alt,
     onDoubleClick, onRightClick,
 }: ImageElementProps) {
     return (
         <Box
-        position="absolute"
-        left={`${x}%`}
-        top={`${y}%`}
-        width={`${width}%`}
-        height={`${height}%`}
-        zIndex={zIndex}
+        width="100%"
+        height="100%"
         overflow="hidden"
         display="flex"
         alignItems="center"
         justifyContent="center"
-        pointerEvents="all"
         style={{ cursor: 'default', boxSizing: 'border-box' }}
         onDoubleClick={() => onDoubleClick(id)}
         onContextMenu={(e) => {

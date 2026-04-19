@@ -15,21 +15,16 @@ interface TextElementProps {
 }
 
 function TextElement({
-  id, text, fontSize, color, width, height, x, y, zIndex,
-  onDoubleClick, onRightClick,
+  text, fontSize, color,
+  onDoubleClick, onRightClick, id,
 }: TextElementProps) {
   return (
     <Box
-      position="absolute"
-      left={`${x}%`}
-      top={`${y}%`}
-      width={`${width}%`}
-      height={`${height}%`}
-      zIndex={zIndex}
+      width="100%"
+      height="100%"
       border="1px solid"
       borderColor="gray.300"
       overflow="auto"
-      pointerEvents="all"
       style={{
         fontSize: `${fontSize}em`,
         color: color,

@@ -14,25 +14,18 @@ interface VideoElementProps {
 }
 
 function VideoElement({
-  id, url, autoplay, width, height, x, y, zIndex,
+  id, url, autoplay,
   onDoubleClick, onRightClick,
 }: VideoElementProps) {
-
-  // Append autoplay parameter to URL if needed
   const finalUrl = autoplay
     ? `${url}${url.includes('?') ? '&' : '?'}autoplay=1`
     : url;
 
   return (
     <Box
-      position="absolute"
-      left={`${x}%`}
-      top={`${y}%`}
-      width={`${width}%`}
-      height={`${height}%`}
-      zIndex={zIndex}
+      width="100%"
+      height="100%"
       overflow="hidden"
-      pointerEvents="all"
       style={{ cursor: 'default', boxSizing: 'border-box' }}
       onDoubleClick={() => onDoubleClick(id)}
       onContextMenu={(e) => {
