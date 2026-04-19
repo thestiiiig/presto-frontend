@@ -11,7 +11,6 @@ interface PresentationCardProps {
 
 function PresentationCard({ id, name, description, thumbnail, slideCount }: PresentationCardProps) {
   const navigate = useNavigate();
-  
   return (
     <Box
       bg="white"

@@ -14,35 +14,35 @@ interface ImageElementProps {
 }
 
 function ImageElement({
-    id, src, alt,
-    onDoubleClick, onRightClick,
+  id, src, alt,
+  onDoubleClick, onRightClick,
 }: ImageElementProps) {
-    return (
-        <Box
-        width="100%"
-        height="100%"
-        overflow="hidden"
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        style={{ cursor: 'default', boxSizing: 'border-box' }}
-        onDoubleClick={() => onDoubleClick(id)}
-        onContextMenu={(e) => {
-            e.preventDefault();
-            onRightClick(id);
+  return (
+    <Box
+      width="100%"
+      height="100%"
+      overflow="hidden"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      style={{ cursor: 'default', boxSizing: 'border-box' }}
+      onDoubleClick={() => onDoubleClick(id)}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        onRightClick(id);
+      }}
+    >
+      <img
+        src={src}
+        alt={alt}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
         }}
-        >
-            <img
-                src={src}
-                alt={alt}
-                style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'contain',
-                }}
-            />
-        </Box>
-    );
+      />
+    </Box>
+  );
 }
 
 export default ImageElement;

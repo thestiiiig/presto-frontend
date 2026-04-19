@@ -14,7 +14,7 @@ interface VideoElementProps {
 }
 
 function VideoElement({
-  id, url, autoplay,
+  id: _id, url, autoplay,
   onDoubleClick, onRightClick,
 }: VideoElementProps) {
   const finalUrl = autoplay
@@ -27,10 +27,10 @@ function VideoElement({
       height="100%"
       overflow="hidden"
       style={{ cursor: 'default', boxSizing: 'border-box' }}
-      onDoubleClick={() => onDoubleClick(id)}
+      onDoubleClick={() => onDoubleClick(_id)}
       onContextMenu={(e) => {
         e.preventDefault();
-        onRightClick(id);
+        onRightClick(_id);
       }}
     >
       <iframe
@@ -40,7 +40,7 @@ function VideoElement({
         style={{ border: 'none' }}
         allow="autoplay; encrypted-media"
         allowFullScreen
-        title={`video-${id}`}
+        title={`video-${_id}`}
       />
     </Box>
   );
