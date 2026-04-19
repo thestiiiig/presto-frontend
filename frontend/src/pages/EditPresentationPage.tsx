@@ -483,6 +483,15 @@ function EditPresentationPage() {
             >
             + Image
           </Button>
+
+          <Button
+            size="sm"
+            colorPalette="purple"
+            variant="outline"
+            onClick={() => { setEditingVideoElement(null); setShowAddVideo(true); }}
+            >
+            + Video
+          </Button>
         </Flex>
         {/* Slide canvas - 16:9 ratio using paddingTop trick */}
         <Box
@@ -523,19 +532,36 @@ function EditPresentationPage() {
                 } else if (el.type === 'image') {
                     const e = el as ImageElementData;
                     return (
-                    <ImageElement
-                        key={e.id}
-                        id={e.id}
-                        src={e.src}
-                        alt={e.alt}
-                        width={e.width}
-                        height={e.height}
-                        x={e.x}
-                        y={e.y}
-                        zIndex={e.zIndex}
-                        onDoubleClick={handleEditElement}
-                        onRightClick={handleDeleteElement}
-                    />
+                        <ImageElement
+                            key={e.id}
+                            id={e.id}
+                            src={e.src}
+                            alt={e.alt}
+                            width={e.width}
+                            height={e.height}
+                            x={e.x}
+                            y={e.y}
+                            zIndex={e.zIndex}
+                            onDoubleClick={handleEditElement}
+                            onRightClick={handleDeleteElement}
+                        />
+                    );
+                } else if (el.type === 'video') {
+                    const e = el as VideoElementData;
+                    return (
+                        <VideoElement
+                            key={e.id}
+                            id={e.id}
+                            url={e.url}
+                            autoplay={e.autoplay}
+                            width={e.width}
+                            height={e.height}
+                            x={e.x}
+                            y={e.y}
+                            zIndex={e.zIndex}
+                            onDoubleClick={handleEditElement}
+                            onRightClick={handleDeleteElement}
+                        />
                     );
                 }
             })}
