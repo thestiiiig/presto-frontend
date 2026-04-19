@@ -53,7 +53,19 @@ interface VideoElementData {
   zIndex: number;
 }
 
-type SlideElement = TextElementData | ImageElementData | VideoElementData;
+interface CodeElementData {
+  id: string;
+  type: 'code';
+  code: string;
+  fontSize: number;
+  width: number;
+  height: number;
+  x: number;
+  y: number;
+  zIndex: number;
+}
+
+type SlideElement = TextElementData | ImageElementData | VideoElementData | CodeElementData;
 
 interface Slide {
     id: string;
@@ -83,6 +95,8 @@ function EditPresentationPage() {
     const [editingImageElement, setEditingImageElement] = useState<{ id: string; type: 'image' } | null>(null);
     const [showAddVideo, setShowAddVideo] = useState(false);
     const [editingVideoElement, setEditingVideoElement] = useState<{ id: string; type: 'video' } | null>(null);
+    const [showAddCode, setShowAddCode] = useState(false);
+    const [editingCodeElement, setEditingCodeElement] = useState<{ id: string; type: 'code' } | null>(null);
     const [error, setError] = useState('');
 
     // Fetch the specific presentation on load
