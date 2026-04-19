@@ -8,7 +8,7 @@ interface DraggableElementProps {
   width: number;
   height: number;
   zIndex: number;
-  slideRef: React.RefObject<HTMLDivElement>;
+  slideRef: React.RefObject<HTMLDivElement | null>;
   onMove: (id: string, newX: number, newY: number) => void;
   onDoubleClick: (id: string) => void;
   onRightClick: (id: string) => void;
