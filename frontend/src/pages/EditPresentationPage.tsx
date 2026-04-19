@@ -799,6 +799,22 @@ function EditPresentationPage() {
             }
         />
       )}
+      {showAddCode && (
+        <AddCodeModal
+            onClose={() => { setShowAddCode(false); setEditingCodeElement(null); }}
+            onAdd={editingCodeElement ? handleSaveCodeEdit : handleAddCode}
+            initialValues={
+            editingCodeElement
+                ? (() => {
+                    const e = currentSlide?.elements.find(
+                    (el) => el.id === editingCodeElement.id
+                    ) as CodeElementData | undefined;
+                    return e ? { code: e.code, fontSize: e.fontSize, width: e.width, height: e.height } : undefined;
+                })()
+                : undefined
+            }
+        />
+      )}
     </Box>
   );
 }
