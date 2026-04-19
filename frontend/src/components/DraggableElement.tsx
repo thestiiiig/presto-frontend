@@ -102,11 +102,11 @@ function DraggableElement({
     return () => window.removeEventListener('click', handleClickOutside);
   }, []);
 
-  const corners = [
-    { top: -3, left: -3 },
-    { top: -3, right: -3 },
-    { bottom: -3, left: -3 },
-    { bottom: -3, right: -3 },
+  const cornerPositions = [
+    { top: 0, left: 0 },                    // top left
+    { top: 0, left: `${width}%` },          // top right  
+    { top: `${height}%`, left: 0 },         // bottom left
+    { top: `${height}%`, left: `${width}%` }, // bottom right
   ];
 
   return (
@@ -126,7 +126,7 @@ function DraggableElement({
     >
       {children}
 
-      {isSelected && corners.map((corner, i) => (
+      {isSelected && cornerPositions.map((corner, i) => (
         <Box
           key={i}
           position="absolute"
@@ -135,10 +135,9 @@ function DraggableElement({
           bg="blue.500"
           border="1px solid white"
           style={{
-            top: corner.top !== undefined ? `${corner.top}px` : undefined,
-            bottom: corner.bottom !== undefined ? `${corner.bottom}px` : undefined,
-            left: corner.left !== undefined ? `${corner.left}px` : undefined,
-            right: corner.right !== undefined ? `${corner.right}px` : undefined,
+            top: corner.top,
+            left: corner.left,
+            transform: 'translate(-50%, -50%)',
             cursor: 'grab',
           }}
         />
