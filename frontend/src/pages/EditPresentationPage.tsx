@@ -306,6 +306,60 @@ function EditPresentationPage() {
         }
     };
 
+    const handleAddVideo = async (url: string, autoplay: boolean, width: number, height: number) => {
+        if (!presentation) return;
+        const currentSlide = presentation.slides[currentSlideIndex];
+        const newElement: VideoElementData = {
+            id: `video-${Date.now()}`,
+            type: 'video',
+            url,
+            autoplay,
+            width,
+            height,
+            x: 0,
+            y: 0,
+            zIndex: currentSlide.elements.length + 1,
+        };
+        const updatedSlides = presentation.slides.map((slide, i) =>
+            i === currentSlideIndex
+            ? { ...slide, elements: [...slide.elements, newElement] }
+            : slide
+        );
+        const updated = { ...presentation, slides: updatedSlides };
+        try {
+            await savePresentation(updated);
+            setPresentation(updated);
+            setShowAddVideo(false);
+        } catch {
+            setError('Failed to add video element.');
+        }
+        };
+
+        const handleSaveVideoEdit = async (url: string, autoplay: boolean, width: number, height: number) => {
+        if (!presentation || !editingVideoElement) return;
+        const updatedSlides = presentation.slides.map((slide, i) =>
+            i === currentSlideIndex
+            ? {
+                ...slide,
+                elements: slide.elements.map((el) =>
+                    el.id === editingVideoElement.id
+                    ? { ...el, url, autoplay, width, height }
+                    : el
+                ),
+                }
+            : slide
+        );
+        const updated = { ...presentation, slides: updatedSlides };
+        try {
+            await savePresentation(updated);
+            setPresentation(updated);
+            setShowAddVideo(false);
+            setEditingVideoElement(null);
+        } catch {
+            setError('Failed to update video element.');
+        }
+    };
+
     const handleDeleteElement = async (elementId: string) => {
         if (!presentation) return;
         const updatedSlides = presentation.slides.map((slide, i) =>
@@ -333,6 +387,9 @@ function EditPresentationPage() {
         } else if (el.type === 'image') {
             setEditingImageElement({ id: elementId, type: 'image' });
             setShowAddImage(true);
+        } else if (el.type === 'video') {
+            setEditingVideoElement({ id: elementId, type: 'video' });
+            setShowAddVideo(true);
         }
     };
 
