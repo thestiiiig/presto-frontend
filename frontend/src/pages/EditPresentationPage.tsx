@@ -13,6 +13,8 @@ import AddTextModal from "../components/AddTextModal";
 import TextElement from '../components/TextElement';
 import AddImageModal from "../components/AddImageModal";
 import ImageElement from "../components/ImageElement";
+import AddVideoModal from '../components/AddVideoModal';
+import VideoElement from '../components/VideoElement';
 
 interface TextElementData {
     id: string;
@@ -39,7 +41,19 @@ interface ImageElementData {
     zIndex: number;
 }
 
-type SlideElement = TextElementData | ImageElementData;
+interface VideoElementData {
+  id: string;
+  type: 'video';
+  url: string;
+  autoplay: boolean;
+  width: number;
+  height: number;
+  x: number;
+  y: number;
+  zIndex: number;
+}
+
+type SlideElement = TextElementData | ImageElementData | VideoElementData;
 
 interface Slide {
     id: string;
@@ -67,6 +81,8 @@ function EditPresentationPage() {
     const [editingElement, setEditingElement] = useState<{ id: string; type: 'text' } | null>(null);
     const [showAddImage, setShowAddImage] = useState(false);
     const [editingImageElement, setEditingImageElement] = useState<{ id: string; type: 'image' } | null>(null);
+    const [showAddVideo, setShowAddVideo] = useState(false);
+    const [editingVideoElement, setEditingVideoElement] = useState<{ id: string; type: 'video' } | null>(null);
     const [error, setError] = useState('');
 
     // Fetch the specific presentation on load
