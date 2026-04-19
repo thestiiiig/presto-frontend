@@ -684,6 +684,22 @@ function EditPresentationPage() {
             }
         />
       )}
+      {showAddVideo && (
+        <AddVideoModal
+            onClose={() => { setShowAddVideo(false); setEditingVideoElement(null); }}
+            onAdd={editingVideoElement ? handleSaveVideoEdit : handleAddVideo}
+            initialValues={
+            editingVideoElement
+                ? (() => {
+                    const e = currentSlide?.elements.find(
+                    (el) => el.id === editingVideoElement.id
+                    ) as VideoElementData | undefined;
+                    return e ? { url: e.url, autoplay: e.autoplay, width: e.width, height: e.height } : undefined;
+                })()
+                : undefined
+            }
+        />
+      )}
     </Box>
   );
 }
