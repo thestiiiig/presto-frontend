@@ -112,7 +112,7 @@ function AddTextModal({ onClose, onAdd, initialValues }: AddTextModalProps) {
 
           <Flex gap={3} w="full">
             <Button colorPalette="blue" onClick={handleAdd}>
-                {initialValues ? 'Save' : 'Add'}
+              {initialValues ? 'Save' : 'Add'}
             </Button>
             <Button variant="outline" onClick={onClose}>Cancel</Button>
           </Flex>

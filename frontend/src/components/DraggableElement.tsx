@@ -1,4 +1,6 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
+import type { RefObject, ReactNode } from 'react';
+import type { MouseEvent as ReactMouseEvent } from 'react';
 import { Box } from '@chakra-ui/react';
 
 interface DraggableElementProps {
@@ -8,12 +10,12 @@ interface DraggableElementProps {
   width: number;
   height: number;
   zIndex: number;
-  slideRef: React.RefObject<HTMLDivElement | null>;
+  slideRef: RefObject<HTMLDivElement | null>;
   onMove: (id: string, newX: number, newY: number) => void;
   onResize: (id: string, newX: number, newY: number, newWidth: number, newHeight: number) => void;
   onDoubleClick: (id: string) => void;
   onRightClick: (id: string) => void;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 type Corner = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
@@ -35,7 +37,7 @@ function DraggableElement({
   const clickTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const clickCount = useRef(0);
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handleMouseDown = (e: ReactMouseEvent) => {
     if (e.button !== 0) return;
     e.stopPropagation();
 
@@ -59,7 +61,7 @@ function DraggableElement({
     startSize.current = { width, height };
   };
 
-  const handleCornerMouseDown = (e: React.MouseEvent, corner: Corner) => {
+  const handleCornerMouseDown = (e: ReactMouseEvent, corner: Corner) => {
     e.stopPropagation();
     e.preventDefault();
     isResizing.current = corner;
