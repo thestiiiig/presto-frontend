@@ -568,6 +568,23 @@ function EditPresentationPage() {
             } : undefined}
         />
       )}
+
+      {showAddImage && (
+        <AddImageModal
+            onClose={() => { setShowAddImage(false); setEditingImageElement(null); }}
+            onAdd={editingImageElement ? handleSaveImageEdit : handleAddImage}
+            initialValues={
+            editingImageElement
+                ? (() => {
+                    const e = currentSlide?.elements.find(
+                    (el) => el.id === editingImageElement.id
+                    ) as ImageElementData | undefined;
+                    return e ? { src: e.src, alt: e.alt, width: e.width, height: e.height } : undefined;
+                })()
+                : undefined
+            }
+        />
+      )}
     </Box>
   );
 }
