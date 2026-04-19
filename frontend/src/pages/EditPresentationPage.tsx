@@ -15,6 +15,8 @@ import AddImageModal from "../components/AddImageModal";
 import ImageElement from "../components/ImageElement";
 import AddVideoModal from '../components/AddVideoModal';
 import VideoElement from '../components/VideoElement';
+import AddCodeModal from "../components/AddCodeModal";
+import CodeElement from "../components/CodeElement";
 
 interface TextElementData {
     id: string;
@@ -458,6 +460,9 @@ function EditPresentationPage() {
         } else if (el.type === 'video') {
             setEditingVideoElement({ id: elementId, type: 'video' });
             setShowAddVideo(true);
+        } else if (el.type === 'code') {
+            setEditingCodeElement({ id: elementId, type: 'code' });
+            setShowAddCode(true);
         }
     };
 
@@ -560,6 +565,15 @@ function EditPresentationPage() {
             >
             + Video
           </Button>
+
+          <Button
+            size="sm"
+            colorPalette="orange"
+            variant="outline"
+            onClick={() => { setEditingCodeElement(null); setShowAddCode(true); }}
+            >
+            + Code
+          </Button>
         </Flex>
         {/* Slide canvas - 16:9 ratio using paddingTop trick */}
         <Box
@@ -622,6 +636,23 @@ function EditPresentationPage() {
                             id={e.id}
                             url={e.url}
                             autoplay={e.autoplay}
+                            width={e.width}
+                            height={e.height}
+                            x={e.x}
+                            y={e.y}
+                            zIndex={e.zIndex}
+                            onDoubleClick={handleEditElement}
+                            onRightClick={handleDeleteElement}
+                        />
+                    );
+                } else if (el.type === 'code') {
+                    const e = el as CodeElementData;
+                    return (
+                        <CodeElement
+                            key={e.id}
+                            id={e.id}
+                            code={e.code}
+                            fontSize={e.fontSize}
                             width={e.width}
                             height={e.height}
                             x={e.x}
