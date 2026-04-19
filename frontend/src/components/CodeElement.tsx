@@ -10,7 +10,6 @@ SyntaxHighlighter.registerLanguage('python', python);
 SyntaxHighlighter.registerLanguage('c', c);
 
 const detectLanguage = (code: string): string => {
-  // Python indicators
   if (
     /\bdef\b/.test(code) ||
     /\belif\b/.test(code) ||
@@ -19,7 +18,6 @@ const detectLanguage = (code: string): string => {
     /\bTrue\b|\bFalse\b|\bNone\b/.test(code)
   ) return 'python';
 
-  // C indicators
   if (
     /#include/.test(code) ||
     /\bprintf\s*\(/.test(code) ||
@@ -28,7 +26,6 @@ const detectLanguage = (code: string): string => {
     /\bvoid\b/.test(code)
   ) return 'c';
 
-  // Default is JavaScript
   return 'javascript';
 };
 
@@ -46,21 +43,16 @@ interface CodeElementProps {
 }
 
 function CodeElement({
-  id, code, fontSize, width, height, x, y, zIndex,
+  id, code, fontSize,
   onDoubleClick, onRightClick,
 }: CodeElementProps) {
   const language = detectLanguage(code);
 
   return (
     <Box
-      position="absolute"
-      left={`${x}%`}
-      top={`${y}%`}
-      width={`${width}%`}
-      height={`${height}%`}
-      zIndex={zIndex}
+      width="100%"
+      height="100%"
       overflow="auto"
-      pointerEvents="all"
       border="1px solid"
       borderColor="gray.300"
       style={{ cursor: 'default', boxSizing: 'border-box', fontSize: `${fontSize}em` }}
