@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Box,
@@ -100,6 +100,7 @@ function EditPresentationPage() {
     const [showAddCode, setShowAddCode] = useState(false);
     const [editingCodeElement, setEditingCodeElement] = useState<{ id: string; type: 'code' } | null>(null);
     const [error, setError] = useState('');
+    const slideRef = useRef<HTMLDivElement>(null);
 
     // Fetch the specific presentation on load
     useEffect(() => {
@@ -501,6 +502,30 @@ function EditPresentationPage() {
         ? (currentSlide?.elements.find((e) => e.id === editingElement.id) as TextElementData | undefined)
         : undefined;
 
+    
+    const handleMoveElement = async (elementId: string, newX: number, newY: number) => {
+        if (!presentation) return;
+        const updatedSlides = presentation.slides.map((slide, i) =>
+            i === currentSlideIndex
+            ? {
+                ...slide,
+                elements: slide.elements.map((el) =>
+                    el.id === elementId ? { ...el, x: newX, y: newY } : el
+                ),
+                }
+            : slide
+        );
+        const updated = { ...presentation, slides: updatedSlides };
+        // Update local state immediately for smooth dragging
+        setPresentation(updated);
+        // Save to backend after move
+        try {
+            await savePresentation(updated);
+        } catch {
+            setError('Failed to move element.');
+        }
+    };
+    
     return (
     <Box minH="100vh" bg="gray.50">
 
@@ -589,6 +614,7 @@ function EditPresentationPage() {
         >
           {/* Inner content sits inside absolute box to fill canvas */}
           <Box
+            ref={slideRef}
             position="absolute"
             inset={0}
           >
