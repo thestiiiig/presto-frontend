@@ -401,6 +401,15 @@ function EditPresentationPage() {
           >
             + Text
           </Button>
+
+          <Button
+            size="sm"
+            colorPalette="green"
+            variant="outline"
+            onClick={() => { setEditingImageElement(null); setShowAddImage(true); }}
+            >
+            + Image
+          </Button>
         </Flex>
         {/* Slide canvas - 16:9 ratio using paddingTop trick */}
         <Box
@@ -420,8 +429,9 @@ function EditPresentationPage() {
             inset={0}
           >
             {currentSlide?.elements.map((el) => {
-                const e = el as TextElementData;
-                return (
+                if (el.type === 'text') {
+                    const e = el as TextElementData;
+                    return (
                     <TextElement
                         key={e.id}
                         id={e.id}
@@ -436,7 +446,25 @@ function EditPresentationPage() {
                         onDoubleClick={handleEditElement}
                         onRightClick={handleDeleteElement}
                     />
-                );
+                    );
+                } else if (el.type === 'image') {
+                    const e = el as ImageElementData;
+                    return (
+                    <ImageElement
+                        key={e.id}
+                        id={e.id}
+                        src={e.src}
+                        alt={e.alt}
+                        width={e.width}
+                        height={e.height}
+                        x={e.x}
+                        y={e.y}
+                        zIndex={e.zIndex}
+                        onDoubleClick={handleEditElement}
+                        onRightClick={handleDeleteElement}
+                    />
+                    );
+                }
             })}
             {/* Slide number - bottom left */}
             <Text
