@@ -9,19 +9,36 @@ import {
 } from '@chakra-ui/react';
 import ConfirmModal from '../components/ConfirmModal';
 import EditPresentationModal from '../components/EditPresentationModal';
+import AddTextModal from "../components/AddTextModal";
+import TextElement from '../components/TextElement';
+
+interface TextElementData {
+    id: string;
+    type: 'text';
+    text: string;
+    fontSize: number;
+    color: string;
+    width: number;
+    height: number;
+    x: number;
+    y: number;
+    zIndex: number;
+}
+
+type SlideElement = TextElementData;
 
 interface Slide {
     id: string;
-    elements: object[];
+    elements: SlideElement[];
     background: string;
 }
 
 interface Presentation {
-  id: string;
-  name: string;
-  description: string;
-  thumbnail: string;
-  slides: Slide[];
+    id: string;
+    name: string;
+    description: string;
+    thumbnail: string;
+    slides: Slide[];
 }
 
 function EditPresentationPage() {
@@ -32,8 +49,10 @@ function EditPresentationPage() {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [showDeleteSlideConfirm, setShowDeleteSlideConfirm] = useState(false);
+    const [showAddText, setShowAddText] = useState(false);
+    const [editingElement, setEditingElement] = useState<{ id: string; type: 'text' } | null>(null);
     const [error, setError] = useState('');
-    
+
     // Fetch the specific presentation on load
     useEffect(() => {
         const fetchPresentation = async () => {
@@ -104,7 +123,7 @@ function EditPresentationPage() {
         }
     };
 
-    // Keyboard navigation 
+    // Keyboard navigation
     const handleKeyDown = useCallback((e: KeyboardEvent) => {
         if (!presentation) return;
         if (e.key === 'ArrowLeft' && currentSlideIndex > 0) {
@@ -171,10 +190,94 @@ function EditPresentationPage() {
         }
     };
 
+    const handleAddText = async (text: string, fontSize: number, color: string, width: number, height: number) => {
+        if (!presentation) return;
+        const currentSlide = presentation.slides[currentSlideIndex];
+        const newElement: TextElementData = {
+            id: `text-${Date.now()}`,
+            type: 'text',
+            text,
+            fontSize,
+            color,
+            width,
+            height,
+            x: 0,
+            y: 0,
+            zIndex: currentSlide.elements.length + 1,
+        };
+        const updatedSlides = presentation.slides.map((slide, i) =>
+            i === currentSlideIndex
+            ? { ...slide, elements: [...slide.elements, newElement] }
+            : slide
+        );
+        const updated = { ...presentation, slides: updatedSlides };
+        try {
+            await savePresentation(updated);
+            setPresentation(updated);
+            setShowAddText(false);
+        } catch {
+            setError('Failed to add text element.');
+        }
+    };
+    const handleDeleteElement = async (elementId: string) => {
+        if (!presentation) return;
+        const updatedSlides = presentation.slides.map((slide, i) =>
+            i === currentSlideIndex
+            ? { ...slide, elements: slide.elements.filter((el) => el.id !== elementId) }
+            : slide
+        );
+        const updated = { ...presentation, slides: updatedSlides };
+        try {
+            await savePresentation(updated);
+            setPresentation(updated);
+        } catch {
+            setError('Failed to delete element.');
+        }
+    };
+
+    const handleEditElement = (elementId: string) => {
+        const el = presentation?.slides[currentSlideIndex]?.elements.find(
+            (e) => e.id === elementId
+        );
+        if (!el) return;
+        setEditingElement({ id: elementId, type: el.type as 'text' });
+        setShowAddText(true);
+    };
+
+    const handleSaveTextEdit = async (
+    text: string, fontSize: number, color: string, width: number, height: number
+    ) => {
+        if (!presentation || !editingElement) return;
+        const updatedSlides = presentation.slides.map((slide, i) =>
+            i === currentSlideIndex
+            ? {
+                ...slide,
+                elements: slide.elements.map((el) =>
+                    el.id === editingElement.id
+                    ? { ...el, text, fontSize, color, width, height }
+                    : el
+                ),
+                }
+            : slide
+        );
+        const updated = { ...presentation, slides: updatedSlides };
+        try {
+            await savePresentation(updated);
+            setPresentation(updated);
+            setShowAddText(false);
+            setEditingElement(null);
+        } catch {
+            setError('Failed to update element.');
+        }
+    };
+
     const currentSlide = presentation?.slides[currentSlideIndex];
     const totalSlides = presentation?.slides.length || 0;
     const isFirst = currentSlideIndex === 0;
     const isLast = currentSlideIndex === totalSlides - 1;
+    const editingElementData = editingElement
+        ? (currentSlide?.elements.find((e) => e.id === editingElement.id) as TextElementData | undefined)
+        : undefined;
 
     return (
     <Box minH="100vh" bg="gray.50">
@@ -195,7 +298,7 @@ function EditPresentationPage() {
         >
           ← Back
         </Button>
-        <Heading 
+        <Heading
             size="md"
             cursor="pointer"
             onClick={() => setShowEditModal(true)}
@@ -213,7 +316,16 @@ function EditPresentationPage() {
 
       <Box p={8}>
         {error && <Text color="red.500" mb={4}>{error}</Text>}
-
+        <Flex gap={2} mb={4}>
+          <Button
+            size="sm"
+            colorPalette="blue"
+            variant="outline"
+            onClick={() => {setEditingElement(null); setShowAddText(true);}}
+          >
+            + Text
+          </Button>
+        </Flex>
         {/* Slide canvas - 16:9 ratio using paddingTop trick */}
         <Box
           position="relative"
@@ -231,6 +343,25 @@ function EditPresentationPage() {
             position="absolute"
             inset={0}
           >
+            {currentSlide?.elements.map((el) => {
+                const e = el as TextElementData;
+                return (
+                    <TextElement
+                        key={e.id}
+                        id={e.id}
+                        text={e.text}
+                        fontSize={e.fontSize}
+                        color={e.color}
+                        width={e.width}
+                        height={e.height}
+                        x={e.x}
+                        y={e.y}
+                        zIndex={e.zIndex}
+                        onDoubleClick={handleEditElement}
+                        onRightClick={handleDeleteElement}
+                    />
+                );
+            })}
             {/* Slide number - bottom left */}
             <Text
               position="absolute"
@@ -319,7 +450,20 @@ function EditPresentationPage() {
             onCancel={() => setShowDeleteSlideConfirm(false)}
         />
       )}
-    
+
+      {showAddText && (
+        <AddTextModal
+            onClose={() => {setShowAddText(false); setEditingElement(null);}}
+            onAdd={editingElement ? handleSaveTextEdit : handleAddText}
+            initialValues={editingElementData ? {
+                text: editingElementData.text,
+                fontSize: editingElementData.fontSize,
+                color: editingElementData.color,
+                width: editingElementData.width,
+                height: editingElementData.height,
+            } : undefined}
+        />
+      )}
     </Box>
   );
 }
