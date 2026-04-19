@@ -18,6 +18,7 @@ import VideoElement from '../components/VideoElement';
 import AddCodeModal from "../components/AddCodeModal";
 import CodeElement from "../components/CodeElement";
 import DraggableElement from "../components/DraggableElement";
+import BackgroundModal from '../components/BackgroundModal';
 
 interface TextElementData {
     id: string;
@@ -74,6 +75,7 @@ interface Slide {
     id: string;
     elements: SlideElement[];
     background: string;
+    isCustomBackground: boolean;
 }
 
 interface Presentation {
@@ -82,6 +84,7 @@ interface Presentation {
     description: string;
     thumbnail: string;
     slides: Slide[];
+    defaultBackground: string;
 }
 
 function EditPresentationPage() {
@@ -102,6 +105,7 @@ function EditPresentationPage() {
     const [editingCodeElement, setEditingCodeElement] = useState<{ id: string; type: 'code' } | null>(null);
     const [error, setError] = useState('');
     const slideRef = useRef<HTMLDivElement>(null);
+    const [showBackgroundModal, setShowBackgroundModal] = useState(false);
 
     // Fetch the specific presentation on load
     useEffect(() => {
@@ -123,6 +127,7 @@ function EditPresentationPage() {
                     id: (s as Slide).id || `slide-${i}-${Date.now()}`,
                     elements: (s as Slide).elements || [],
                     background: (s as Slide).background || '',
+                    isCustomBackground: (s as Slide).isCustomBackground || false,
                 }));
                 setPresentation({ ...found, slides: migratedSlides });
             } catch {
@@ -157,7 +162,8 @@ function EditPresentationPage() {
         const newSlide: Slide = {
             id: `slide-${Date.now()}`,
             elements: [],
-            background: '',
+            background: presentation.defaultBackground || '',
+            isCustomBackground: false,
         };
         const updated = {
             ...presentation,
@@ -503,7 +509,7 @@ function EditPresentationPage() {
         ? (currentSlide?.elements.find((e) => e.id === editingElement.id) as TextElementData | undefined)
         : undefined;
 
-    
+
     const handleMoveElement = async (elementId: string, newX: number, newY: number) => {
         if (!presentation) return;
         const updatedSlides = presentation.slides.map((slide, i) =>
@@ -551,7 +557,41 @@ function EditPresentationPage() {
             setError('Failed to resize element.');
         }
     };
+    // Apply background to current slide only
+    const handleApplyBackgroundToSlide = async (background: string) => {
+        if (!presentation) return;
+        const updatedSlides = presentation.slides.map((slide, i) =>
+            i === currentSlideIndex
+            ? { ...slide, background, isCustomBackground: true }
+            : slide
+        );
+        const updated = { ...presentation, slides: updatedSlides };
+        try {
+            await savePresentation(updated);
+            setPresentation(updated);
+            setShowBackgroundModal(false);
+        } catch {
+            setError('Failed to update background.');
+        }
+    };
 
+    // Set as default — applies to all slides that haven't been individually modified
+    const handleApplyDefaultBackground = async (background: string) => {
+        if (!presentation) return;
+        const updatedSlides = presentation.slides.map((slide) =>
+            slide.isCustomBackground
+            ? slide
+            : { ...slide, background }
+        );
+        const updated = { ...presentation, slides: updatedSlides, defaultBackground: background };
+        try {
+            await savePresentation(updated);
+            setPresentation(updated);
+            setShowBackgroundModal(false);
+        } catch {
+            setError('Failed to update default background.');
+        }
+    };
     return (
     <Box minH="100vh" bg="gray.50">
 
@@ -625,18 +665,30 @@ function EditPresentationPage() {
             >
             + Code
           </Button>
+          <Button
+            size="sm"
+            colorPalette="teal"
+            variant="outline"
+            onClick={() => setShowBackgroundModal(true)}
+            >
+            🎨 Background
+          </Button>
         </Flex>
         {/* Slide canvas - 16:9 ratio using paddingTop trick */}
         <Box
           position="relative"
           w="100%"
           paddingTop="56.25%"
-          bg={currentSlide?.background || 'white'}
           borderRadius="lg"
           boxShadow="md"
           overflow="hidden"
           border="1px solid"
           borderColor="gray.200"
+          style={{
+            background: currentSlide?.background || presentation?.defaultBackground || 'white',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
         >
           {/* Inner content sits inside absolute box to fill canvas */}
           <Box
@@ -921,6 +973,15 @@ function EditPresentationPage() {
                 })()
                 : undefined
             }
+        />
+      )}
+      {showBackgroundModal && (
+        <BackgroundModal
+            currentBackground={currentSlide?.background || ''}
+            defaultBackground={presentation?.defaultBackground || ''}
+            onClose={() => setShowBackgroundModal(false)}
+            onApplyToSlide={handleApplyBackgroundToSlide}
+            onApplyAsDefault={handleApplyDefaultBackground}
         />
       )}
     </Box>
