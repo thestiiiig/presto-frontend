@@ -526,7 +526,32 @@ function EditPresentationPage() {
             setError('Failed to move element.');
         }
     };
-    
+
+    const handleResizeElement = async (
+        elementId: string, newX: number, newY: number, newWidth: number, newHeight: number
+    ) => {
+        if (!presentation) return;
+        const updatedSlides = presentation.slides.map((slide, i) =>
+            i === currentSlideIndex
+            ? {
+                ...slide,
+                elements: slide.elements.map((el) =>
+                    el.id === elementId
+                    ? { ...el, x: newX, y: newY, width: newWidth, height: newHeight }
+                    : el
+                ),
+            }
+            : slide
+        );
+        const updated = { ...presentation, slides: updatedSlides };
+        setPresentation(updated);
+        try {
+            await savePresentation(updated);
+        } catch {
+            setError('Failed to resize element.');
+        }
+    };
+
     return (
     <Box minH="100vh" bg="gray.50">
 
@@ -633,6 +658,7 @@ function EditPresentationPage() {
                         zIndex={e.zIndex}
                         slideRef={slideRef}
                         onMove={handleMoveElement}
+                        onResize={handleResizeElement}
                         onDoubleClick={handleEditElement}
                         onRightClick={handleDeleteElement}
                     >
@@ -664,6 +690,7 @@ function EditPresentationPage() {
                         zIndex={e.zIndex}
                         slideRef={slideRef}
                         onMove={handleMoveElement}
+                        onResize={handleResizeElement}
                         onDoubleClick={handleEditElement}
                         onRightClick={handleDeleteElement}
                     >
@@ -694,6 +721,7 @@ function EditPresentationPage() {
                         zIndex={e.zIndex}
                         slideRef={slideRef}
                         onMove={handleMoveElement}
+                        onResize={handleResizeElement}
                         onDoubleClick={handleEditElement}
                         onRightClick={handleDeleteElement}
                     >
@@ -724,6 +752,7 @@ function EditPresentationPage() {
                         zIndex={e.zIndex}
                         slideRef={slideRef}
                         onMove={handleMoveElement}
+                        onResize={handleResizeElement}
                         onDoubleClick={handleEditElement}
                         onRightClick={handleDeleteElement}
                     >
