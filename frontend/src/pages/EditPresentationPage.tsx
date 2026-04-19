@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Box,
@@ -17,7 +17,6 @@ import AddVideoModal from '../components/AddVideoModal';
 import VideoElement from '../components/VideoElement';
 import AddCodeModal from "../components/AddCodeModal";
 import CodeElement from "../components/CodeElement";
-import DraggableElement from "../components/DraggableElement";
 
 interface TextElementData {
     id: string;
@@ -101,7 +100,6 @@ function EditPresentationPage() {
     const [showAddCode, setShowAddCode] = useState(false);
     const [editingCodeElement, setEditingCodeElement] = useState<{ id: string; type: 'code' } | null>(null);
     const [error, setError] = useState('');
-    const slideRef = useRef<HTMLDivElement>(null);
 
     // Fetch the specific presentation on load
     useEffect(() => {
@@ -503,30 +501,6 @@ function EditPresentationPage() {
         ? (currentSlide?.elements.find((e) => e.id === editingElement.id) as TextElementData | undefined)
         : undefined;
 
-    
-    const handleMoveElement = async (elementId: string, newX: number, newY: number) => {
-        if (!presentation) return;
-        const updatedSlides = presentation.slides.map((slide, i) =>
-            i === currentSlideIndex
-            ? {
-                ...slide,
-                elements: slide.elements.map((el) =>
-                    el.id === elementId ? { ...el, x: newX, y: newY } : el
-                ),
-                }
-            : slide
-        );
-        const updated = { ...presentation, slides: updatedSlides };
-        // Update local state immediately for smooth dragging
-        setPresentation(updated);
-        // Save to backend after move
-        try {
-            await savePresentation(updated);
-        } catch {
-            setError('Failed to move element.');
-        }
-    };
-    
     return (
     <Box minH="100vh" bg="gray.50">
 
@@ -615,7 +589,6 @@ function EditPresentationPage() {
         >
           {/* Inner content sits inside absolute box to fill canvas */}
           <Box
-            ref={slideRef}
             position="absolute"
             inset={0}
           >
@@ -623,126 +596,74 @@ function EditPresentationPage() {
                 if (el.type === 'text') {
                     const e = el as TextElementData;
                     return (
-                    <DraggableElement
+                    <TextElement
                         key={e.id}
-                        id={e.id}
-                        x={e.x}
-                        y={e.y}
-                        width={e.width}
-                        height={e.height}
-                        zIndex={e.zIndex}
-                        slideRef={slideRef}
-                        onMove={handleMoveElement}
-                        onDoubleClick={handleEditElement}
-                        onRightClick={handleDeleteElement}
-                    >
-                        <TextElement
                         id={e.id}
                         text={e.text}
                         fontSize={e.fontSize}
                         color={e.color}
                         width={e.width}
                         height={e.height}
-                        x={0}
-                        y={0}
+                        x={e.x}
+                        y={e.y}
                         zIndex={e.zIndex}
-                        onDoubleClick={() => {}}
-                        onRightClick={() => {}}
-                        />
-                    </DraggableElement>
+                        onDoubleClick={handleEditElement}
+                        onRightClick={handleDeleteElement}
+                    />
                     );
                 } else if (el.type === 'image') {
                     const e = el as ImageElementData;
                     return (
-                    <DraggableElement
-                        key={e.id}
-                        id={e.id}
-                        x={e.x}
-                        y={e.y}
-                        width={e.width}
-                        height={e.height}
-                        zIndex={e.zIndex}
-                        slideRef={slideRef}
-                        onMove={handleMoveElement}
-                        onDoubleClick={handleEditElement}
-                        onRightClick={handleDeleteElement}
-                    >
                         <ImageElement
-                        id={e.id}
-                        src={e.src}
-                        alt={e.alt}
-                        width={e.width}
-                        height={e.height}
-                        x={0}
-                        y={0}
-                        zIndex={e.zIndex}
-                        onDoubleClick={() => {}}
-                        onRightClick={() => {}}
+                            key={e.id}
+                            id={e.id}
+                            src={e.src}
+                            alt={e.alt}
+                            width={e.width}
+                            height={e.height}
+                            x={e.x}
+                            y={e.y}
+                            zIndex={e.zIndex}
+                            onDoubleClick={handleEditElement}
+                            onRightClick={handleDeleteElement}
                         />
-                    </DraggableElement>
                     );
                 } else if (el.type === 'video') {
                     const e = el as VideoElementData;
                     return (
-                    <DraggableElement
-                        key={e.id}
-                        id={e.id}
-                        x={e.x}
-                        y={e.y}
-                        width={e.width}
-                        height={e.height}
-                        zIndex={e.zIndex}
-                        slideRef={slideRef}
-                        onMove={handleMoveElement}
-                        onDoubleClick={handleEditElement}
-                        onRightClick={handleDeleteElement}
-                    >
                         <VideoElement
-                        id={e.id}
-                        url={e.url}
-                        autoplay={e.autoplay}
-                        width={e.width}
-                        height={e.height}
-                        x={0}
-                        y={0}
-                        zIndex={e.zIndex}
-                        onDoubleClick={() => {}}
-                        onRightClick={() => {}}
+                            key={e.id}
+                            id={e.id}
+                            url={e.url}
+                            autoplay={e.autoplay}
+                            width={e.width}
+                            height={e.height}
+                            x={e.x}
+                            y={e.y}
+                            zIndex={e.zIndex}
+                            onDoubleClick={handleEditElement}
+                            onRightClick={handleDeleteElement}
                         />
-                    </DraggableElement>
                     );
                 } else if (el.type === 'code') {
                     const e = el as CodeElementData;
                     return (
-                    <DraggableElement
-                        key={e.id}
-                        id={e.id}
-                        x={e.x}
-                        y={e.y}
-                        width={e.width}
-                        height={e.height}
-                        zIndex={e.zIndex}
-                        slideRef={slideRef}
-                        onMove={handleMoveElement}
-                        onDoubleClick={handleEditElement}
-                        onRightClick={handleDeleteElement}
-                    >
                         <CodeElement
-                        id={e.id}
-                        code={e.code}
-                        fontSize={e.fontSize}
-                        width={e.width}
-                        height={e.height}
-                        x={0}
-                        y={0}
-                        zIndex={e.zIndex}
-                        onDoubleClick={() => {}}
-                        onRightClick={() => {}}
+                            key={e.id}
+                            id={e.id}
+                            code={e.code}
+                            fontSize={e.fontSize}
+                            width={e.width}
+                            height={e.height}
+                            x={e.x}
+                            y={e.y}
+                            zIndex={e.zIndex}
+                            onDoubleClick={handleEditElement}
+                            onRightClick={handleDeleteElement}
                         />
-                    </DraggableElement>
                     );
                 }
-                })}
+            })}
             {/* Slide number - bottom left */}
             <Text
               position="absolute"
