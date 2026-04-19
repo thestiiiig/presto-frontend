@@ -5,13 +5,30 @@ import js from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript';
 import python from 'react-syntax-highlighter/dist/esm/languages/hljs/python';
 import c from 'react-syntax-highlighter/dist/esm/languages/hljs/c';
 
-// Register only the languages we need — keeps bundle size small
 SyntaxHighlighter.registerLanguage('javascript', js);
 SyntaxHighlighter.registerLanguage('python', python);
 SyntaxHighlighter.registerLanguage('c', c);
 
 const detectLanguage = (code: string): string => {
+  // Python indicators
+  if (
+    /\bdef\b/.test(code) ||
+    /\belif\b/.test(code) ||
+    /\bprint\s*\(/.test(code) ||
+    /\bimport\s+\w/.test(code) ||
+    /\bTrue\b|\bFalse\b|\bNone\b/.test(code)
+  ) return 'python';
 
+  // C indicators
+  if (
+    /#include/.test(code) ||
+    /\bprintf\s*\(/.test(code) ||
+    /\bint\s+main\s*\(/.test(code) ||
+    /\bstruct\b/.test(code) ||
+    /\bvoid\b/.test(code)
+  ) return 'c';
+
+  // Default is JavaScript
   return 'javascript';
 };
 
