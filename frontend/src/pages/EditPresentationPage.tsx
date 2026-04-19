@@ -235,6 +235,61 @@ function EditPresentationPage() {
             setError('Failed to add text element.');
         }
     };
+
+    const handleAddImage = async (src: string, alt: string, width: number, height: number) => {
+        if (!presentation) return;
+        const currentSlide = presentation.slides[currentSlideIndex];
+        const newElement: ImageElementData = {
+            id: `image-${Date.now()}`,
+            type: 'image',
+            src,
+            alt,
+            width,
+            height,
+            x: 0,
+            y: 0,
+            zIndex: currentSlide.elements.length + 1,
+        };
+        const updatedSlides = presentation.slides.map((slide, i) =>
+            i === currentSlideIndex
+            ? { ...slide, elements: [...slide.elements, newElement] }
+            : slide
+        );
+        const updated = { ...presentation, slides: updatedSlides };
+        try {
+            await savePresentation(updated);
+            setPresentation(updated);
+            setShowAddImage(false);
+        } catch {
+            setError('Failed to add image element.');
+        }
+        };
+
+        const handleSaveImageEdit = async (src: string, alt: string, width: number, height: number) => {
+        if (!presentation || !editingImageElement) return;
+        const updatedSlides = presentation.slides.map((slide, i) =>
+            i === currentSlideIndex
+            ? {
+                ...slide,
+                elements: slide.elements.map((el) =>
+                    el.id === editingImageElement.id
+                    ? { ...el, src, alt, width, height }
+                    : el
+                ),
+                }
+            : slide
+        );
+        const updated = { ...presentation, slides: updatedSlides };
+        try {
+            await savePresentation(updated);
+            setPresentation(updated);
+            setShowAddImage(false);
+            setEditingImageElement(null);
+        } catch {
+            setError('Failed to update image element.');
+        }
+    };
+
     const handleDeleteElement = async (elementId: string) => {
         if (!presentation) return;
         const updatedSlides = presentation.slides.map((slide, i) =>
@@ -256,8 +311,13 @@ function EditPresentationPage() {
             (e) => e.id === elementId
         );
         if (!el) return;
-        setEditingElement({ id: elementId, type: el.type as 'text' });
-        setShowAddText(true);
+        if (el.type === 'text') {
+            setEditingElement({ id: elementId, type: 'text' });
+            setShowAddText(true);
+        } else if (el.type === 'image') {
+            setEditingImageElement({ id: elementId, type: 'image' });
+            setShowAddImage(true);
+        }
     };
 
     const handleSaveTextEdit = async (
