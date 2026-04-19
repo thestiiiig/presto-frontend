@@ -11,6 +11,8 @@ import ConfirmModal from '../components/ConfirmModal';
 import EditPresentationModal from '../components/EditPresentationModal';
 import AddTextModal from "../components/AddTextModal";
 import TextElement from '../components/TextElement';
+import AddImageModal from "../components/AddImageModal";
+import ImageElement from "../components/ImageElement";
 
 interface TextElementData {
     id: string;
@@ -25,7 +27,19 @@ interface TextElementData {
     zIndex: number;
 }
 
-type SlideElement = TextElementData;
+interface ImageElementData {
+    id: string;
+    type: 'image';
+    src: string;
+    alt: string;
+    width: number;
+    height: number;
+    x: number;
+    y: number;
+    zIndex: number;
+}
+
+type SlideElement = TextElementData | ImageElementData;
 
 interface Slide {
     id: string;
@@ -51,6 +65,8 @@ function EditPresentationPage() {
     const [showDeleteSlideConfirm, setShowDeleteSlideConfirm] = useState(false);
     const [showAddText, setShowAddText] = useState(false);
     const [editingElement, setEditingElement] = useState<{ id: string; type: 'text' } | null>(null);
+    const [showAddImage, setShowAddImage] = useState(false);
+    const [editingImageElement, setEditingImageElement] = useState<{ id: string; type: 'image' } | null>(null);
     const [error, setError] = useState('');
 
     // Fetch the specific presentation on load
