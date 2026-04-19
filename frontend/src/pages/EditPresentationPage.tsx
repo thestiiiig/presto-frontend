@@ -17,6 +17,7 @@ import AddVideoModal from '../components/AddVideoModal';
 import VideoElement from '../components/VideoElement';
 import AddCodeModal from "../components/AddCodeModal";
 import CodeElement from "../components/CodeElement";
+import DraggableElement from "../components/DraggableElement";
 
 interface TextElementData {
     id: string;
@@ -622,74 +623,126 @@ function EditPresentationPage() {
                 if (el.type === 'text') {
                     const e = el as TextElementData;
                     return (
-                    <TextElement
+                    <DraggableElement
                         key={e.id}
+                        id={e.id}
+                        x={e.x}
+                        y={e.y}
+                        width={e.width}
+                        height={e.height}
+                        zIndex={e.zIndex}
+                        slideRef={slideRef}
+                        onMove={handleMoveElement}
+                        onDoubleClick={handleEditElement}
+                        onRightClick={handleDeleteElement}
+                    >
+                        <TextElement
                         id={e.id}
                         text={e.text}
                         fontSize={e.fontSize}
                         color={e.color}
                         width={e.width}
                         height={e.height}
-                        x={e.x}
-                        y={e.y}
+                        x={0}
+                        y={0}
                         zIndex={e.zIndex}
-                        onDoubleClick={handleEditElement}
-                        onRightClick={handleDeleteElement}
-                    />
+                        onDoubleClick={() => {}}
+                        onRightClick={() => {}}
+                        />
+                    </DraggableElement>
                     );
                 } else if (el.type === 'image') {
                     const e = el as ImageElementData;
                     return (
+                    <DraggableElement
+                        key={e.id}
+                        id={e.id}
+                        x={e.x}
+                        y={e.y}
+                        width={e.width}
+                        height={e.height}
+                        zIndex={e.zIndex}
+                        slideRef={slideRef}
+                        onMove={handleMoveElement}
+                        onDoubleClick={handleEditElement}
+                        onRightClick={handleDeleteElement}
+                    >
                         <ImageElement
-                            key={e.id}
-                            id={e.id}
-                            src={e.src}
-                            alt={e.alt}
-                            width={e.width}
-                            height={e.height}
-                            x={e.x}
-                            y={e.y}
-                            zIndex={e.zIndex}
-                            onDoubleClick={handleEditElement}
-                            onRightClick={handleDeleteElement}
+                        id={e.id}
+                        src={e.src}
+                        alt={e.alt}
+                        width={e.width}
+                        height={e.height}
+                        x={0}
+                        y={0}
+                        zIndex={e.zIndex}
+                        onDoubleClick={() => {}}
+                        onRightClick={() => {}}
                         />
+                    </DraggableElement>
                     );
                 } else if (el.type === 'video') {
                     const e = el as VideoElementData;
                     return (
+                    <DraggableElement
+                        key={e.id}
+                        id={e.id}
+                        x={e.x}
+                        y={e.y}
+                        width={e.width}
+                        height={e.height}
+                        zIndex={e.zIndex}
+                        slideRef={slideRef}
+                        onMove={handleMoveElement}
+                        onDoubleClick={handleEditElement}
+                        onRightClick={handleDeleteElement}
+                    >
                         <VideoElement
-                            key={e.id}
-                            id={e.id}
-                            url={e.url}
-                            autoplay={e.autoplay}
-                            width={e.width}
-                            height={e.height}
-                            x={e.x}
-                            y={e.y}
-                            zIndex={e.zIndex}
-                            onDoubleClick={handleEditElement}
-                            onRightClick={handleDeleteElement}
+                        id={e.id}
+                        url={e.url}
+                        autoplay={e.autoplay}
+                        width={e.width}
+                        height={e.height}
+                        x={0}
+                        y={0}
+                        zIndex={e.zIndex}
+                        onDoubleClick={() => {}}
+                        onRightClick={() => {}}
                         />
+                    </DraggableElement>
                     );
                 } else if (el.type === 'code') {
                     const e = el as CodeElementData;
                     return (
+                    <DraggableElement
+                        key={e.id}
+                        id={e.id}
+                        x={e.x}
+                        y={e.y}
+                        width={e.width}
+                        height={e.height}
+                        zIndex={e.zIndex}
+                        slideRef={slideRef}
+                        onMove={handleMoveElement}
+                        onDoubleClick={handleEditElement}
+                        onRightClick={handleDeleteElement}
+                    >
                         <CodeElement
-                            key={e.id}
-                            id={e.id}
-                            code={e.code}
-                            fontSize={e.fontSize}
-                            width={e.width}
-                            height={e.height}
-                            x={e.x}
-                            y={e.y}
-                            zIndex={e.zIndex}
-                            onDoubleClick={handleEditElement}
-                            onRightClick={handleDeleteElement}
+                        id={e.id}
+                        code={e.code}
+                        fontSize={e.fontSize}
+                        width={e.width}
+                        height={e.height}
+                        x={0}
+                        y={0}
+                        zIndex={e.zIndex}
+                        onDoubleClick={() => {}}
+                        onRightClick={() => {}}
                         />
+                    </DraggableElement>
                     );
                 }
-            })}
+                })}
             {/* Slide number - bottom left */}
             <Text
               position="absolute"
