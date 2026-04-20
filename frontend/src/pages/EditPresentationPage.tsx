@@ -19,6 +19,7 @@ import AddCodeModal from "../components/AddCodeModal";
 import CodeElement from "../components/CodeElement";
 import DraggableElement from "../components/DraggableElement";
 import BackgroundModal from '../components/BackgroundModal';
+import SlideControlPanel from '../components/SlideControlPanel';
 
 interface TextElementData {
     id: string;
@@ -107,6 +108,7 @@ function EditPresentationPage() {
   const [error, setError] = useState('');
   const slideRef = useRef<HTMLDivElement>(null);
   const [showBackgroundModal, setShowBackgroundModal] = useState(false);
+  const [showSlidePanel, setShowSlidePanel] = useState(false);
 
   // Fetch the specific presentation on load
   useEffect(() => {
@@ -673,6 +675,14 @@ function EditPresentationPage() {
           >
             🎨 Background
           </Button>
+          <Button
+            size="sm"
+            colorPalette="gray"
+            variant="outline"
+            onClick={() => setShowSlidePanel(true)}
+          >
+            🗂 Slide Control Panel
+          </Button>
         </Flex>
         {/* Slide canvas - 16:9 ratio using paddingTop trick */}
         <Box
@@ -984,6 +994,15 @@ function EditPresentationPage() {
           onClose={() => setShowBackgroundModal(false)}
           onApplyToSlide={handleApplyBackgroundToSlide}
           onApplyAsDefault={handleApplyDefaultBackground}
+        />
+      )}
+      {showSlidePanel && presentation && (
+        <SlideControlPanel
+          slides={presentation.slides}
+          currentSlideIndex={currentSlideIndex}
+          defaultBackground={presentation.defaultBackground || ''}
+          onSelectSlide={setCurrentSlideIndex}
+          onClose={() => setShowSlidePanel(false)}
         />
       )}
     </Box>
