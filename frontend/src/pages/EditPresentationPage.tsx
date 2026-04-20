@@ -508,89 +508,89 @@ function EditPresentationPage() {
     ? (currentSlide?.elements.find((e) => e.id === editingElement.id) as TextElementData | undefined)
     : undefined;
 
-    const handleMoveElement = async (elementId: string, newX: number, newY: number) => {
-        if (!presentation) return;
-        const updatedSlides = presentation.slides.map((slide, i) =>
-            i === currentSlideIndex
-            ? {
-                ...slide,
-                elements: slide.elements.map((el) =>
-                    el.id === elementId ? { ...el, x: newX, y: newY } : el
-                ),
-                }
-            : slide
-        );
-        const updated = { ...presentation, slides: updatedSlides };
-        // Update local state immediately for smooth dragging
-        setPresentation(updated);
-        // Save to backend after move
-        try {
-            await savePresentation(updated);
-        } catch {
-            setError('Failed to move element.');
+  const handleMoveElement = async (elementId: string, newX: number, newY: number) => {
+    if (!presentation) return;
+    const updatedSlides = presentation.slides.map((slide, i) =>
+      i === currentSlideIndex
+        ? {
+          ...slide,
+          elements: slide.elements.map((el) =>
+            el.id === elementId ? { ...el, x: newX, y: newY } : el
+          ),
         }
-    };
+        : slide
+    );
+    const updated = { ...presentation, slides: updatedSlides };
+    // Update local state immediately for smooth dragging
+    setPresentation(updated);
+    // Save to backend after move
+    try {
+      await savePresentation(updated);
+    } catch {
+      setError('Failed to move element.');
+    }
+  };
 
-    const handleResizeElement = async (
-        elementId: string, newX: number, newY: number, newWidth: number, newHeight: number
-    ) => {
-        if (!presentation) return;
-        const updatedSlides = presentation.slides.map((slide, i) =>
-            i === currentSlideIndex
-            ? {
-                ...slide,
-                elements: slide.elements.map((el) =>
-                    el.id === elementId
-                    ? { ...el, x: newX, y: newY, width: newWidth, height: newHeight }
-                    : el
-                ),
-            }
-            : slide
-        );
-        const updated = { ...presentation, slides: updatedSlides };
-        setPresentation(updated);
-        try {
-            await savePresentation(updated);
-        } catch {
-            setError('Failed to resize element.');
+  const handleResizeElement = async (
+    elementId: string, newX: number, newY: number, newWidth: number, newHeight: number
+  ) => {
+    if (!presentation) return;
+    const updatedSlides = presentation.slides.map((slide, i) =>
+      i === currentSlideIndex
+        ? {
+          ...slide,
+          elements: slide.elements.map((el) =>
+            el.id === elementId
+              ? { ...el, x: newX, y: newY, width: newWidth, height: newHeight }
+              : el
+          ),
         }
-    };
+        : slide
+    );
+    const updated = { ...presentation, slides: updatedSlides };
+    setPresentation(updated);
+    try {
+      await savePresentation(updated);
+    } catch {
+      setError('Failed to resize element.');
+    }
+  };
     // Apply background to current slide only
-    const handleApplyBackgroundToSlide = async (background: string) => {
-        if (!presentation) return;
-        const updatedSlides = presentation.slides.map((slide, i) =>
-            i === currentSlideIndex
-            ? { ...slide, background, isCustomBackground: true }
-            : slide
-        );
-        const updated = { ...presentation, slides: updatedSlides };
-        try {
-            await savePresentation(updated);
-            setPresentation(updated);
-            setShowBackgroundModal(false);
-        } catch {
-            setError('Failed to update background.');
-        }
-    };
+  const handleApplyBackgroundToSlide = async (background: string) => {
+    if (!presentation) return;
+    const updatedSlides = presentation.slides.map((slide, i) =>
+      i === currentSlideIndex
+        ? { ...slide, background, isCustomBackground: true }
+        : slide
+    );
+    const updated = { ...presentation, slides: updatedSlides };
+    try {
+      await savePresentation(updated);
+      setPresentation(updated);
+      setShowBackgroundModal(false);
+    } catch {
+      setError('Failed to update background.');
+    }
+  };
 
-    // Set as default — applies to all slides that haven't been individually modified
-    const handleApplyDefaultBackground = async (background: string) => {
-        if (!presentation) return;
-        const updatedSlides = presentation.slides.map((slide) =>
-            slide.isCustomBackground
-            ? slide
-            : { ...slide, background }
-        );
-        const updated = { ...presentation, slides: updatedSlides, defaultBackground: background };
-        try {
-            await savePresentation(updated);
-            setPresentation(updated);
-            setShowBackgroundModal(false);
-        } catch {
-            setError('Failed to update default background.');
-        }
-    };
-    return (
+  // Set as default — applies to all slides that haven't been individually modified
+  const handleApplyDefaultBackground = async (background: string) => {
+    if (!presentation) return;
+    const updatedSlides = presentation.slides.map((slide) =>
+      slide.isCustomBackground
+        ? slide
+        : { ...slide, background }
+    );
+    const updated = { ...presentation, slides: updatedSlides, defaultBackground: background };
+    try {
+      await savePresentation(updated);
+      setPresentation(updated);
+      setShowBackgroundModal(false);
+    } catch {
+      setError('Failed to update default background.');
+    }
+  };
+  return (
     <Box minH="100vh" bg="gray.50">
 
       <Flex
@@ -610,9 +610,9 @@ function EditPresentationPage() {
           ← Back
         </Button>
         <Heading
-            size="md"
-            cursor="pointer"
-            onClick={() => setShowEditModal(true)}
+          size="md"
+          cursor="pointer"
+          onClick={() => setShowEditModal(true)}
         >
           {presentation?.name || 'Loading...'} ✏️
         </Heading>
@@ -642,7 +642,7 @@ function EditPresentationPage() {
             colorPalette="green"
             variant="outline"
             onClick={() => { setEditingImageElement(null); setShowAddImage(true); }}
-            >
+          >
             + Image
           </Button>
 
@@ -651,7 +651,7 @@ function EditPresentationPage() {
             colorPalette="purple"
             variant="outline"
             onClick={() => { setEditingVideoElement(null); setShowAddVideo(true); }}
-            >
+          >
             + Video
           </Button>
 
@@ -660,7 +660,7 @@ function EditPresentationPage() {
             colorPalette="orange"
             variant="outline"
             onClick={() => { setEditingCodeElement(null); setShowAddCode(true); }}
-            >
+          >
             + Code
           </Button>
           <Button
@@ -668,7 +668,7 @@ function EditPresentationPage() {
             colorPalette="teal"
             variant="outline"
             onClick={() => setShowBackgroundModal(true)}
-            >
+          >
             🎨 Background
           </Button>
         </Flex>
@@ -847,12 +847,12 @@ function EditPresentationPage() {
                     size="sm"
                 >
                 ‹
-                </Button>
-                <Button
-                    onClick={handleAddSlide}
-                    colorPalette="blue"
-                    size="sm"
-                >
+            </Button>
+            <Button
+              onClick={handleAddSlide}
+              colorPalette="blue"
+              size="sm"
+            >
                 +
                 </Button>
                 <Button
@@ -863,8 +863,8 @@ function EditPresentationPage() {
                     size="sm"
                 >
                 ›
-                </Button>
-            </Flex>
+            </Button>
+          </Flex>
 
             {/* Right group - destructive action */}
             <Button
@@ -880,34 +880,34 @@ function EditPresentationPage() {
                 }}
             >
                 🗑 Delete Slide
-            </Button>
+          </Button>
         </Flex>
 
       </Box>
 
       {showDeleteConfirm && (
         <ConfirmModal
-        message="This will permanently delete the presentation."
-        onConfirm={handleDelete}
-        onCancel={() => setShowDeleteConfirm(false)}
+          message="This will permanently delete the presentation."
+          onConfirm={handleDelete}
+          onCancel={() => setShowDeleteConfirm(false)}
         />
       )}
       {showEditModal && presentation && (
         <EditPresentationModal
-            initialName={presentation.name}
-            initialThumbnail={presentation.thumbnail}
-            onClose={() => setShowEditModal(false)}
-            onSave={handleEditSave}
+          initialName={presentation.name}
+          initialThumbnail={presentation.thumbnail}
+          onClose={() => setShowEditModal(false)}
+          onSave={handleEditSave}
         />
       )}
       {showDeleteSlideConfirm && (
         <ConfirmModal
-            message="Are you sure you want to delete this slide?"
-            onConfirm={() => {
+          message="Are you sure you want to delete this slide?"
+          onConfirm={() => {
             setShowDeleteSlideConfirm(false);
             handleDeleteSlide();
-            }}
-            onCancel={() => setShowDeleteSlideConfirm(false)}
+          }}
+          onCancel={() => setShowDeleteSlideConfirm(false)}
         />
       )}
 
@@ -927,9 +927,9 @@ function EditPresentationPage() {
 
       {showAddImage && (
         <AddImageModal
-            onClose={() => { setShowAddImage(false); setEditingImageElement(null); }}
-            onAdd={editingImageElement ? handleSaveImageEdit : handleAddImage}
-            initialValues={
+          onClose={() => { setShowAddImage(false); setEditingImageElement(null); }}
+          onAdd={editingImageElement ? handleSaveImageEdit : handleAddImage}
+          initialValues={
             editingImageElement
                 ? (() => {
                     const e = currentSlide?.elements.find(
@@ -943,9 +943,9 @@ function EditPresentationPage() {
       )}
       {showAddVideo && (
         <AddVideoModal
-            onClose={() => { setShowAddVideo(false); setEditingVideoElement(null); }}
-            onAdd={editingVideoElement ? handleSaveVideoEdit : handleAddVideo}
-            initialValues={
+          onClose={() => { setShowAddVideo(false); setEditingVideoElement(null); }}
+          onAdd={editingVideoElement ? handleSaveVideoEdit : handleAddVideo}
+          initialValues={
             editingVideoElement
                 ? (() => {
                     const e = currentSlide?.elements.find(
