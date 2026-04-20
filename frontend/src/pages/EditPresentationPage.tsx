@@ -107,204 +107,203 @@ function EditPresentationPage() {
     const slideRef = useRef<HTMLDivElement>(null);
     const [showBackgroundModal, setShowBackgroundModal] = useState(false);
 
-    // Fetch the specific presentation on load
-    useEffect(() => {
-        const fetchPresentation = async () => {
-            const token = localStorage.getItem('token');
-            try {
-                const res = await fetch('http://localhost:5005/store', {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-                const data = await res.json();
-                const all: Presentation[] = data.store?.presentations || [];
-                const found = all.find((p) => p.id === id);
-                if (!found) {
-                    setError('Presentation not found.');
-                return;
-                }
-                // new Slide structure
-                const migratedSlides: Slide[] = found.slides.map((s, i) => ({
-                    id: (s as Slide).id || `slide-${i}-${Date.now()}`,
-                    elements: (s as Slide).elements || [],
-                    background: (s as Slide).background || '',
-                    isCustomBackground: (s as Slide).isCustomBackground || false,
-                }));
-                setPresentation({ ...found, slides: migratedSlides });
-            } catch {
-                setError('Failed to load presentation.');
-            }
-        };
-        fetchPresentation();
-    }, [id]);
-
-    // Save entire presentation back to store
-    const savePresentation = async (updated: Presentation) => {
-        const token = localStorage.getItem('token');
+  // Fetch the specific presentation on load
+  useEffect(() => {
+    const fetchPresentation = async () => {
+      const token = localStorage.getItem('token');
+      try {
         const res = await fetch('http://localhost:5005/store', {
-            headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
         const all: Presentation[] = data.store?.presentations || [];
-        const updatedAll = all.map((p) => p.id === id ? updated : p);
-        await fetch('http://localhost:5005/store', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-        },
-            body: JSON.stringify({ store: { presentations: updatedAll } }),
-        });
+        const found = all.find((p) => p.id === id);
+        if (!found) {
+          setError('Presentation not found.');
+          return;
+        }
+        // new Slide structure
+        const migratedSlides: Slide[] = found.slides.map((s, i) => ({
+          id: (s as Slide).id || `slide-${i}-${Date.now()}`,
+          elements: (s as Slide).elements || [],
+          background: (s as Slide).background || '',
+          isCustomBackground: (s as Slide).isCustomBackground || false,
+        }));
+        setPresentation({ ...found, slides: migratedSlides });
+      } catch {
+        setError('Failed to load presentation.');
+      }
     };
+    fetchPresentation();
+  }, [id]);
 
-    // Add a new slide at the end
-    const handleAddSlide = async () => {
-        if (!presentation) return;
-        const newSlide: Slide = {
-            id: `slide-${Date.now()}`,
-            elements: [],
-            background: presentation.defaultBackground || '',
-            isCustomBackground: false,
-        };
-        const updated = {
-            ...presentation,
-            slides: [...presentation.slides, newSlide],
-        };
-        try {
-            await savePresentation(updated);
-            setPresentation(updated);
-            // Navigate to the new slide
-            setCurrentSlideIndex(updated.slides.length - 1);
-        } catch {
-            setError('Failed to add slide.');
-        }
+  // Save entire presentation back to store
+  const savePresentation = async (updated: Presentation) => {
+    const token = localStorage.getItem('token');
+    const res = await fetch('http://localhost:5005/store', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await res.json();
+    const all: Presentation[] = data.store?.presentations || [];
+    const updatedAll = all.map((p) => p.id === id ? updated : p);
+    await fetch('http://localhost:5005/store', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ store: { presentations: updatedAll } }),
+    });
+  };
+
+  // Add a new slide at the end
+  const handleAddSlide = async () => {
+    if (!presentation) return;
+    const newSlide: Slide = {
+      id: `slide-${Date.now()}`,
+      elements: [],
+      background: presentation.defaultBackground || '',
+      isCustomBackground: false,
     };
-
-    // Keyboard navigation
-    const handleKeyDown = useCallback((e: KeyboardEvent) => {
-        if (!presentation) return;
-        if (e.key === 'ArrowLeft' && currentSlideIndex > 0) {
-            setCurrentSlideIndex((prev) => prev - 1);
-        }
-        if (e.key === 'ArrowRight' && currentSlideIndex < presentation.slides.length - 1) {
-            setCurrentSlideIndex((prev) => prev + 1);
-        }
-    }, [currentSlideIndex, presentation]);
-
-    // Attach and detach keyboard listener
-    useEffect(() => {
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [handleKeyDown]);
-
-    const handleDelete = async () => {
-        const token = localStorage.getItem('token');
-        try {
-            const res = await fetch('http://localhost:5005/store', {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            const data = await res.json();
-            const all: Presentation[] = data.store?.presentations || [];
-            const updated = all.filter((p) => p.id !== id);
-
-            await fetch('http://localhost:5005/store', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({ store: { presentations: updated } }),
-            });
-
-            navigate('/dashboard');
-        } catch {
-            setError('Failed to delete presentation.');
-        }
+    const updated = {
+      ...presentation,
+      slides: [...presentation.slides, newSlide],
     };
-
-    const handleEditSave = async (newName: string, newThumbnail: string) => {
-        if (!presentation) return;
-        const updated = { ...presentation, name: newName, thumbnail: newThumbnail };
-        try {
-            await savePresentation(updated);
-            setPresentation(updated);
-            setShowEditModal(false);
-        } catch {
-            setError('Failed to update presentation.');
-        }
+    try {
+      await savePresentation(updated);
+      setPresentation(updated);
+      // Navigate to the new slide
+      setCurrentSlideIndex(updated.slides.length - 1);
+    } catch {
+      setError('Failed to add slide.');
     }
+  };
 
-    const handleDeleteSlide = async () => {
-        if (!presentation) return;
-        const updatedSlides = presentation.slides.filter((_, i) => i !== currentSlideIndex);
-        const updated = { ...presentation, slides: updatedSlides };
-        try {
-            await savePresentation(updated);
-            setPresentation(updated);
-            setCurrentSlideIndex((prev) => (prev > 0 ? prev - 1 : 0));
-        } catch {
-            setError('Failed to delete slide.');
-        }
+  // Keyboard navigation
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (!presentation) return;
+    if (e.key === 'ArrowLeft' && currentSlideIndex > 0) {
+      setCurrentSlideIndex((prev) => prev - 1);
+    }
+    if (e.key === 'ArrowRight' && currentSlideIndex < presentation.slides.length - 1) {
+      setCurrentSlideIndex((prev) => prev + 1);
+    }
+  }, [currentSlideIndex, presentation]);
+
+  // Attach and detach keyboard listener
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
+
+  const handleDelete = async () => {
+    const token = localStorage.getItem('token');
+    try {
+      const res = await fetch('http://localhost:5005/store', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      const all: Presentation[] = data.store?.presentations || [];
+      const updated = all.filter((p) => p.id !== id);
+
+      await fetch('http://localhost:5005/store', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ store: { presentations: updated } }),
+      });
+
+      navigate('/dashboard');
+    } catch {
+      setError('Failed to delete presentation.');
+    }
+  };
+
+  const handleEditSave = async (newName: string, newThumbnail: string) => {
+    if (!presentation) return;
+    const updated = { ...presentation, name: newName, thumbnail: newThumbnail };
+    try {
+      await savePresentation(updated);
+      setPresentation(updated);
+      setShowEditModal(false);
+    } catch {
+      setError('Failed to update presentation.');
+    }
+  }
+
+  const handleDeleteSlide = async () => {
+    if (!presentation) return;
+    const updatedSlides = presentation.slides.filter((_, i) => i !== currentSlideIndex);
+    const updated = { ...presentation, slides: updatedSlides };
+    try {
+      await savePresentation(updated);
+      setPresentation(updated);
+      setCurrentSlideIndex((prev) => (prev > 0 ? prev - 1 : 0));
+    } catch {
+      setError('Failed to delete slide.');
+    }
+  };
+
+  const handleAddText = async (text: string, fontSize: number, color: string, width: number, height: number) => {
+    if (!presentation) return;
+    const currentSlide = presentation.slides[currentSlideIndex];
+    const newElement: TextElementData = {
+      id: `text-${Date.now()}`,
+      type: 'text',
+      text,
+      fontSize,
+      color,
+      width,
+      height,
+      x: 0,
+      y: 0,
+      zIndex: currentSlide.elements.length + 1,
     };
+    const updatedSlides = presentation.slides.map((slide, i) =>
+      i === currentSlideIndex
+        ? { ...slide, elements: [...slide.elements, newElement] }
+        : slide
+    );
+    const updated = { ...presentation, slides: updatedSlides };
+    try {
+      await savePresentation(updated);
+      setPresentation(updated);
+      setShowAddText(false);
+    } catch {
+      setError('Failed to add text element.');
+    }
+  };
 
-    const handleAddText = async (text: string, fontSize: number, color: string, width: number, height: number) => {
-        if (!presentation) return;
-        const currentSlide = presentation.slides[currentSlideIndex];
-        const newElement: TextElementData = {
-            id: `text-${Date.now()}`,
-            type: 'text',
-            text,
-            fontSize,
-            color,
-            width,
-            height,
-            x: 0,
-            y: 0,
-            zIndex: currentSlide.elements.length + 1,
-        };
-        const updatedSlides = presentation.slides.map((slide, i) =>
-            i === currentSlideIndex
-            ? { ...slide, elements: [...slide.elements, newElement] }
-            : slide
-        );
-        const updated = { ...presentation, slides: updatedSlides };
-        try {
-            await savePresentation(updated);
-            setPresentation(updated);
-            setShowAddText(false);
-        } catch {
-            setError('Failed to add text element.');
-        }
+  const handleAddImage = async (src: string, alt: string, width: number, height: number) => {
+    if (!presentation) return;
+    const currentSlide = presentation.slides[currentSlideIndex];
+    const newElement: ImageElementData = {
+      id: `image-${Date.now()}`,
+      type: 'image',
+      src,
+      alt,
+      width,
+      height,
+      x: 0,
+      y: 0,
+      zIndex: currentSlide.elements.length + 1,
     };
-
-    const handleAddImage = async (src: string, alt: string, width: number, height: number) => {
-        if (!presentation) return;
-        const currentSlide = presentation.slides[currentSlideIndex];
-        const newElement: ImageElementData = {
-            id: `image-${Date.now()}`,
-            type: 'image',
-            src,
-            alt,
-            width,
-            height,
-            x: 0,
-            y: 0,
-            zIndex: currentSlide.elements.length + 1,
-        };
-        const updatedSlides = presentation.slides.map((slide, i) =>
-            i === currentSlideIndex
-            ? { ...slide, elements: [...slide.elements, newElement] }
-            : slide
-        );
-        const updated = { ...presentation, slides: updatedSlides };
-        try {
-            await savePresentation(updated);
-            setPresentation(updated);
-            setShowAddImage(false);
-        } catch {
-            setError('Failed to add image element.');
-        }
-        };
-
+    const updatedSlides = presentation.slides.map((slide, i) =>
+      i === currentSlideIndex
+        ? { ...slide, elements: [...slide.elements, newElement] }
+        : slide
+    );
+    const updated = { ...presentation, slides: updatedSlides };
+    try {
+      await savePresentation(updated);
+      setPresentation(updated);
+      setShowAddImage(false);
+    } catch {
+      setError('Failed to add image element.');
+    }
+  };
     const handleSaveImageEdit = async (src: string, alt: string, width: number, height: number) => {
         if (!presentation || !editingImageElement) return;
         const updatedSlides = presentation.slides.map((slide, i) =>
