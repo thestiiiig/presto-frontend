@@ -88,24 +88,24 @@ interface Presentation {
 }
 
 function EditPresentationPage() {
-    const { id } = useParams();
-    const navigate = useNavigate();
-    const [presentation, setPresentation] = useState<Presentation | null>(null);
-    const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
-    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-    const [showEditModal, setShowEditModal] = useState(false);
-    const [showDeleteSlideConfirm, setShowDeleteSlideConfirm] = useState(false);
-    const [showAddText, setShowAddText] = useState(false);
-    const [editingElement, setEditingElement] = useState<{ id: string; type: 'text' } | null>(null);
-    const [showAddImage, setShowAddImage] = useState(false);
-    const [editingImageElement, setEditingImageElement] = useState<{ id: string; type: 'image' } | null>(null);
-    const [showAddVideo, setShowAddVideo] = useState(false);
-    const [editingVideoElement, setEditingVideoElement] = useState<{ id: string; type: 'video' } | null>(null);
-    const [showAddCode, setShowAddCode] = useState(false);
-    const [editingCodeElement, setEditingCodeElement] = useState<{ id: string; type: 'code' } | null>(null);
-    const [error, setError] = useState('');
-    const slideRef = useRef<HTMLDivElement>(null);
-    const [showBackgroundModal, setShowBackgroundModal] = useState(false);
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [presentation, setPresentation] = useState<Presentation | null>(null);
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteSlideConfirm, setShowDeleteSlideConfirm] = useState(false);
+  const [showAddText, setShowAddText] = useState(false);
+  const [editingElement, setEditingElement] = useState<{ id: string; type: 'text' } | null>(null);
+  const [showAddImage, setShowAddImage] = useState(false);
+  const [editingImageElement, setEditingImageElement] = useState<{ id: string; type: 'image' } | null>(null);
+  const [showAddVideo, setShowAddVideo] = useState(false);
+  const [editingVideoElement, setEditingVideoElement] = useState<{ id: string; type: 'video' } | null>(null);
+  const [showAddCode, setShowAddCode] = useState(false);
+  const [editingCodeElement, setEditingCodeElement] = useState<{ id: string; type: 'code' } | null>(null);
+  const [error, setError] = useState('');
+  const slideRef = useRef<HTMLDivElement>(null);
+  const [showBackgroundModal, setShowBackgroundModal] = useState(false);
 
   // Fetch the specific presentation on load
   useEffect(() => {
