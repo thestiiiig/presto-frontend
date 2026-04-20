@@ -304,210 +304,209 @@ function EditPresentationPage() {
       setError('Failed to add image element.');
     }
   };
-    const handleSaveImageEdit = async (src: string, alt: string, width: number, height: number) => {
-        if (!presentation || !editingImageElement) return;
-        const updatedSlides = presentation.slides.map((slide, i) =>
-            i === currentSlideIndex
-            ? {
-                ...slide,
-                elements: slide.elements.map((el) =>
-                    el.id === editingImageElement.id
-                    ? { ...el, src, alt, width, height }
-                    : el
-                ),
-                }
-            : slide
-        );
-        const updated = { ...presentation, slides: updatedSlides };
-        try {
-            await savePresentation(updated);
-            setPresentation(updated);
-            setShowAddImage(false);
-            setEditingImageElement(null);
-        } catch {
-            setError('Failed to update image element.');
+  const handleSaveImageEdit = async (src: string, alt: string, width: number, height: number) => {
+    if (!presentation || !editingImageElement) return;
+    const updatedSlides = presentation.slides.map((slide, i) =>
+      i === currentSlideIndex
+        ? {
+          ...slide,
+          elements: slide.elements.map((el) =>
+            el.id === editingImageElement.id
+              ? { ...el, src, alt, width, height }
+              : el
+          ),
         }
+        : slide
+    );
+    const updated = { ...presentation, slides: updatedSlides };
+    try {
+      await savePresentation(updated);
+      setPresentation(updated);
+      setShowAddImage(false);
+      setEditingImageElement(null);
+    } catch {
+      setError('Failed to update image element.');
+    }
+  };
+
+  const handleAddVideo = async (url: string, autoplay: boolean, width: number, height: number) => {
+    if (!presentation) return;
+    const currentSlide = presentation.slides[currentSlideIndex];
+    const newElement: VideoElementData = {
+      id: `video-${Date.now()}`,
+      type: 'video',
+      url,
+      autoplay,
+      width,
+      height,
+      x: 0,
+      y: 0,
+      zIndex: currentSlide.elements.length + 1,
     };
+    const updatedSlides = presentation.slides.map((slide, i) =>
+      i === currentSlideIndex
+        ? { ...slide, elements: [...slide.elements, newElement] }
+        : slide
+    );
+    const updated = { ...presentation, slides: updatedSlides };
+    try {
+      await savePresentation(updated);
+      setPresentation(updated);
+      setShowAddVideo(false);
+    } catch {
+      setError('Failed to add video element.');
+    }
+  };
 
-    const handleAddVideo = async (url: string, autoplay: boolean, width: number, height: number) => {
-        if (!presentation) return;
-        const currentSlide = presentation.slides[currentSlideIndex];
-        const newElement: VideoElementData = {
-            id: `video-${Date.now()}`,
-            type: 'video',
-            url,
-            autoplay,
-            width,
-            height,
-            x: 0,
-            y: 0,
-            zIndex: currentSlide.elements.length + 1,
-        };
-        const updatedSlides = presentation.slides.map((slide, i) =>
-            i === currentSlideIndex
-            ? { ...slide, elements: [...slide.elements, newElement] }
-            : slide
-        );
-        const updated = { ...presentation, slides: updatedSlides };
-        try {
-            await savePresentation(updated);
-            setPresentation(updated);
-            setShowAddVideo(false);
-        } catch {
-            setError('Failed to add video element.');
+  const handleSaveVideoEdit = async (url: string, autoplay: boolean, width: number, height: number) => {
+    if (!presentation || !editingVideoElement) return;
+    const updatedSlides = presentation.slides.map((slide, i) =>
+      i === currentSlideIndex
+        ? {
+          ...slide,
+          elements: slide.elements.map((el) =>
+            el.id === editingVideoElement.id
+              ? { ...el, url, autoplay, width, height }
+              : el
+          ),
         }
-        };
+        : slide
+    );
+    const updated = { ...presentation, slides: updatedSlides };
+    try {
+      await savePresentation(updated);
+      setPresentation(updated);
+      setShowAddVideo(false);
+      setEditingVideoElement(null);
+    } catch {
+      setError('Failed to update video element.');
+    }
+  };
 
-    const handleSaveVideoEdit = async (url: string, autoplay: boolean, width: number, height: number) => {
-        if (!presentation || !editingVideoElement) return;
-        const updatedSlides = presentation.slides.map((slide, i) =>
-            i === currentSlideIndex
-            ? {
-                ...slide,
-                elements: slide.elements.map((el) =>
-                    el.id === editingVideoElement.id
-                    ? { ...el, url, autoplay, width, height }
-                    : el
-                ),
-                }
-            : slide
-        );
-        const updated = { ...presentation, slides: updatedSlides };
-        try {
-            await savePresentation(updated);
-            setPresentation(updated);
-            setShowAddVideo(false);
-            setEditingVideoElement(null);
-        } catch {
-            setError('Failed to update video element.');
-        }
+  const handleAddCode = async (code: string, fontSize: number, width: number, height: number) => {
+    if (!presentation) return;
+    const currentSlide = presentation.slides[currentSlideIndex];
+    const newElement: CodeElementData = {
+      id: `code-${Date.now()}`,
+      type: 'code',
+      code,
+      fontSize,
+      width,
+      height,
+      x: 0,
+      y: 0,
+      zIndex: currentSlide.elements.length + 1,
     };
+    const updatedSlides = presentation.slides.map((slide, i) =>
+      i === currentSlideIndex
+        ? { ...slide, elements: [...slide.elements, newElement] }
+        : slide
+    );
+    const updated = { ...presentation, slides: updatedSlides };
+    try {
+      await savePresentation(updated);
+      setPresentation(updated);
+      setShowAddCode(false);
+    } catch {
+      setError('Failed to add code element.');
+    }
+  };
 
-    const handleAddCode = async (code: string, fontSize: number, width: number, height: number) => {
-        if (!presentation) return;
-        const currentSlide = presentation.slides[currentSlideIndex];
-        const newElement: CodeElementData = {
-            id: `code-${Date.now()}`,
-            type: 'code',
-            code,
-            fontSize,
-            width,
-            height,
-            x: 0,
-            y: 0,
-            zIndex: currentSlide.elements.length + 1,
-        };
-        const updatedSlides = presentation.slides.map((slide, i) =>
-            i === currentSlideIndex
-            ? { ...slide, elements: [...slide.elements, newElement] }
-            : slide
-        );
-        const updated = { ...presentation, slides: updatedSlides };
-        try {
-            await savePresentation(updated);
-            setPresentation(updated);
-            setShowAddCode(false);
-        } catch {
-            setError('Failed to add code element.');
+  const handleSaveCodeEdit = async (code: string, fontSize: number, width: number, height: number) => {
+    if (!presentation || !editingCodeElement) return;
+    const updatedSlides = presentation.slides.map((slide, i) =>
+      i === currentSlideIndex
+        ? {
+          ...slide,
+          elements: slide.elements.map((el) =>
+            el.id === editingCodeElement.id
+              ? { ...el, code, fontSize, width, height }
+              : el
+          ),
         }
-        };
+        : slide
+    );
+    const updated = { ...presentation, slides: updatedSlides };
+    try {
+      await savePresentation(updated);
+      setPresentation(updated);
+      setShowAddCode(false);
+      setEditingCodeElement(null);
+    } catch {
+      setError('Failed to update code element.');
+    }
+  };
 
-    const handleSaveCodeEdit = async (code: string, fontSize: number, width: number, height: number) => {
-        if (!presentation || !editingCodeElement) return;
-        const updatedSlides = presentation.slides.map((slide, i) =>
-            i === currentSlideIndex
-            ? {
-                ...slide,
-                elements: slide.elements.map((el) =>
-                    el.id === editingCodeElement.id
-                    ? { ...el, code, fontSize, width, height }
-                    : el
-                ),
-                }
-            : slide
-        );
-        const updated = { ...presentation, slides: updatedSlides };
-        try {
-            await savePresentation(updated);
-            setPresentation(updated);
-            setShowAddCode(false);
-            setEditingCodeElement(null);
-        } catch {
-            setError('Failed to update code element.');
-        }
-    };
+  const handleDeleteElement = async (elementId: string) => {
+    if (!presentation) return;
+    const updatedSlides = presentation.slides.map((slide, i) =>
+      i === currentSlideIndex
+        ? { ...slide, elements: slide.elements.filter((el) => el.id !== elementId) }
+        : slide
+    );
+    const updated = { ...presentation, slides: updatedSlides };
+    try {
+      await savePresentation(updated);
+      setPresentation(updated);
+    } catch {
+      setError('Failed to delete element.');
+    }
+  };
 
-    const handleDeleteElement = async (elementId: string) => {
-        if (!presentation) return;
-        const updatedSlides = presentation.slides.map((slide, i) =>
-            i === currentSlideIndex
-            ? { ...slide, elements: slide.elements.filter((el) => el.id !== elementId) }
-            : slide
-        );
-        const updated = { ...presentation, slides: updatedSlides };
-        try {
-            await savePresentation(updated);
-            setPresentation(updated);
-        } catch {
-            setError('Failed to delete element.');
-        }
-    };
+  const handleEditElement = (elementId: string) => {
+    const el = presentation?.slides[currentSlideIndex]?.elements.find(
+      (e) => e.id === elementId
+    );
+    if (!el) return;
+    if (el.type === 'text') {
+      setEditingElement({ id: elementId, type: 'text' });
+      setShowAddText(true);
+    } else if (el.type === 'image') {
+      setEditingImageElement({ id: elementId, type: 'image' });
+      setShowAddImage(true);
+    } else if (el.type === 'video') {
+      setEditingVideoElement({ id: elementId, type: 'video' });
+      setShowAddVideo(true);
+    } else if (el.type === 'code') {
+      setEditingCodeElement({ id: elementId, type: 'code' });
+      setShowAddCode(true);
+    }
+  };
 
-    const handleEditElement = (elementId: string) => {
-        const el = presentation?.slides[currentSlideIndex]?.elements.find(
-            (e) => e.id === elementId
-        );
-        if (!el) return;
-        if (el.type === 'text') {
-            setEditingElement({ id: elementId, type: 'text' });
-            setShowAddText(true);
-        } else if (el.type === 'image') {
-            setEditingImageElement({ id: elementId, type: 'image' });
-            setShowAddImage(true);
-        } else if (el.type === 'video') {
-            setEditingVideoElement({ id: elementId, type: 'video' });
-            setShowAddVideo(true);
-        } else if (el.type === 'code') {
-            setEditingCodeElement({ id: elementId, type: 'code' });
-            setShowAddCode(true);
-        }
-    };
-
-    const handleSaveTextEdit = async (
+  const handleSaveTextEdit = async (
     text: string, fontSize: number, color: string, width: number, height: number
-    ) => {
-        if (!presentation || !editingElement) return;
-        const updatedSlides = presentation.slides.map((slide, i) =>
-            i === currentSlideIndex
-            ? {
-                ...slide,
-                elements: slide.elements.map((el) =>
-                    el.id === editingElement.id
-                    ? { ...el, text, fontSize, color, width, height }
-                    : el
-                ),
-                }
-            : slide
-        );
-        const updated = { ...presentation, slides: updatedSlides };
-        try {
-            await savePresentation(updated);
-            setPresentation(updated);
-            setShowAddText(false);
-            setEditingElement(null);
-        } catch {
-            setError('Failed to update element.');
+  ) => {
+    if (!presentation || !editingElement) return;
+    const updatedSlides = presentation.slides.map((slide, i) =>
+      i === currentSlideIndex
+        ? {
+          ...slide,
+          elements: slide.elements.map((el) =>
+            el.id === editingElement.id
+              ? { ...el, text, fontSize, color, width, height }
+              : el
+          ),
         }
-    };
+        : slide
+    );
+    const updated = { ...presentation, slides: updatedSlides };
+    try {
+      await savePresentation(updated);
+      setPresentation(updated);
+      setShowAddText(false);
+      setEditingElement(null);
+    } catch {
+      setError('Failed to update element.');
+    }
+  };
 
-    const currentSlide = presentation?.slides[currentSlideIndex];
-    const totalSlides = presentation?.slides.length || 0;
-    const isFirst = currentSlideIndex === 0;
-    const isLast = currentSlideIndex === totalSlides - 1;
-    const editingElementData = editingElement
-        ? (currentSlide?.elements.find((e) => e.id === editingElement.id) as TextElementData | undefined)
-        : undefined;
-
+  const currentSlide = presentation?.slides[currentSlideIndex];
+  const totalSlides = presentation?.slides.length || 0;
+  const isFirst = currentSlideIndex === 0;
+  const isLast = currentSlideIndex === totalSlides - 1;
+  const editingElementData = editingElement
+    ? (currentSlide?.elements.find((e) => e.id === editingElement.id) as TextElementData | undefined)
+    : undefined;
 
     const handleMoveElement = async (elementId: string, newX: number, newY: number) => {
         if (!presentation) return;
