@@ -5,11 +5,12 @@ import {
 
 interface AddTextModalProps {
   onClose: () => void;
-  onAdd: (text: string, fontSize: number, color: string, width: number, height: number) => void;
+  onAdd: (_text: string, _fontSize: number, _color: string, _fontFamily: string, _width: number, _height: number) => void;
   initialValues?: {
     text: string;
     fontSize: number;
     color: string;
+    fontFamily: string;
     width: number;
     height: number;
   };
@@ -19,6 +20,7 @@ function AddTextModal({ onClose, onAdd, initialValues }: AddTextModalProps) {
   const [text, setText] = useState(initialValues?.text || '');
   const [fontSize, setFontSize] = useState(String(initialValues?.fontSize || '1'));
   const [color, setColor] = useState(initialValues?.color || '#000000');
+  const [fontFamily, setFontFamily] = useState(initialValues?.fontFamily || 'sans-serif');
   const [width, setWidth] = useState(String(initialValues?.width || '30'));
   const [height, setHeight] = useState(String(initialValues?.height || '20'));
 
@@ -28,6 +30,7 @@ function AddTextModal({ onClose, onAdd, initialValues }: AddTextModalProps) {
       text,
       parseFloat(fontSize) || 1,
       color,
+      fontFamily,
       parseFloat(width) || 30,
       parseFloat(height) || 20,
     );
@@ -85,6 +88,21 @@ function AddTextModal({ onClose, onAdd, initialValues }: AddTextModalProps) {
             </Flex>
           </Box>
 
+          <Box w="full">
+            <Text fontSize="sm" color="gray.600" mb={1}>Font family</Text>
+            <select
+              value={fontFamily}
+              onChange={(e) => setFontFamily(e.target.value)}
+              style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #e2e8f0' }}
+            >
+              <option value="sans-serif">Sans Serif</option>
+              <option value="serif">Serif</option>
+              <option value="monospace">Monospace</option>
+              <option value="cursive">Cursive</option>
+              <option value="fantasy">Fantasy</option>
+            </select>
+          </Box>
+
           <Flex gap={4} w="full">
             <Box flex={1}>
               <Text fontSize="sm" color="gray.600" mb={1}>Width (%)</Text>
@@ -112,7 +130,7 @@ function AddTextModal({ onClose, onAdd, initialValues }: AddTextModalProps) {
 
           <Flex gap={3} w="full">
             <Button colorPalette="blue" onClick={handleAdd}>
-                {initialValues ? 'Save' : 'Add'}
+              {initialValues ? 'Save' : 'Add'}
             </Button>
             <Button variant="outline" onClick={onClose}>Cancel</Button>
           </Flex>

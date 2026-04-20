@@ -11,7 +11,7 @@ import {
 
 interface NewPresentationModalProps {
   onClose: () => void;
-  onCreate: (name: string, description: string, thumbnail: string) => void;
+  onCreate: (_name: string, _description: string, _thumbnail: string) => void;
 }
 
 function NewPresentationModal({ onClose, onCreate }: NewPresentationModalProps) {
@@ -60,12 +60,12 @@ function NewPresentationModal({ onClose, onCreate }: NewPresentationModalProps) 
             onChange={(e) => setThumbnail(e.target.value)}
           />
           <Flex gap={3} w="full">
-                <Button colorPalette="blue" onClick={handleCreate}>
+            <Button colorPalette="blue" onClick={handleCreate}>
                 Create
-                </Button>
-                <Button variant="outline" onClick={onClose}>
+            </Button>
+            <Button variant="outline" onClick={onClose}>
                 Cancel
-                </Button>
+            </Button>
           </Flex>
         </VStack>
       </Box>

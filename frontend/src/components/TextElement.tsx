@@ -5,18 +5,19 @@ interface TextElementProps {
   text: string;
   fontSize: number;
   color: string;
+  fontFamily: string;
   width: number;
   height: number;
   x: number;
   y: number;
   zIndex: number;
-  onDoubleClick: (id: string) => void;
-  onRightClick: (id: string) => void;
+  onDoubleClick: (_id: string) => void;
+  onRightClick: (_id: string) => void;
 }
 
 function TextElement({
-  text, fontSize, color,
-  onDoubleClick, onRightClick, id,
+  id, text, fontSize, color, fontFamily,
+  onDoubleClick, onRightClick,
 }: TextElementProps) {
   return (
     <Box
@@ -28,6 +29,7 @@ function TextElement({
       style={{
         fontSize: `${fontSize}em`,
         color: color,
+        fontFamily: fontFamily,
         textAlign: 'left',
         padding: '4px',
         boxSizing: 'border-box',
