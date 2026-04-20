@@ -695,133 +695,133 @@ function EditPresentationPage() {
             inset={0}
           >
             {currentSlide?.elements.map((el) => {
-                if (el.type === 'text') {
-                    const e = el as TextElementData;
-                    return (
-                    <DraggableElement
-                        key={e.id}
-                        id={e.id}
-                        x={e.x}
-                        y={e.y}
-                        width={e.width}
-                        height={e.height}
-                        zIndex={e.zIndex}
-                        slideRef={slideRef}
-                        onMove={handleMoveElement}
-                        onResize={handleResizeElement}
-                        onDoubleClick={handleEditElement}
-                        onRightClick={handleDeleteElement}
-                    >
-                        <TextElement
-                        id={e.id}
-                        text={e.text}
-                        fontSize={e.fontSize}
-                        color={e.color}
-                        width={e.width}
-                        height={e.height}
-                        x={0}
-                        y={0}
-                        zIndex={e.zIndex}
-                        onDoubleClick={() => {}}
-                        onRightClick={() => {}}
-                        />
-                    </DraggableElement>
-                    );
-                } else if (el.type === 'image') {
-                    const e = el as ImageElementData;
-                    return (
-                    <DraggableElement
-                        key={e.id}
-                        id={e.id}
-                        x={e.x}
-                        y={e.y}
-                        width={e.width}
-                        height={e.height}
-                        zIndex={e.zIndex}
-                        slideRef={slideRef}
-                        onMove={handleMoveElement}
-                        onResize={handleResizeElement}
-                        onDoubleClick={handleEditElement}
-                        onRightClick={handleDeleteElement}
-                    >
-                        <ImageElement
-                        id={e.id}
-                        src={e.src}
-                        alt={e.alt}
-                        width={e.width}
-                        height={e.height}
-                        x={0}
-                        y={0}
-                        zIndex={e.zIndex}
-                        onDoubleClick={() => {}}
-                        onRightClick={() => {}}
-                        />
-                    </DraggableElement>
-                    );
-                } else if (el.type === 'video') {
-                    const e = el as VideoElementData;
-                    return (
-                    <DraggableElement
-                        key={e.id}
-                        id={e.id}
-                        x={e.x}
-                        y={e.y}
-                        width={e.width}
-                        height={e.height}
-                        zIndex={e.zIndex}
-                        slideRef={slideRef}
-                        onMove={handleMoveElement}
-                        onResize={handleResizeElement}
-                        onDoubleClick={handleEditElement}
-                        onRightClick={handleDeleteElement}
-                    >
-                        <VideoElement
-                        id={e.id}
-                        url={e.url}
-                        autoplay={e.autoplay}
-                        width={e.width}
-                        height={e.height}
-                        x={0}
-                        y={0}
-                        zIndex={e.zIndex}
-                        onDoubleClick={() => {}}
-                        onRightClick={() => {}}
-                        />
-                    </DraggableElement>
-                    );
-                } else if (el.type === 'code') {
-                    const e = el as CodeElementData;
-                    return (
-                    <DraggableElement
-                        key={e.id}
-                        id={e.id}
-                        x={e.x}
-                        y={e.y}
-                        width={e.width}
-                        height={e.height}
-                        zIndex={e.zIndex}
-                        slideRef={slideRef}
-                        onMove={handleMoveElement}
-                        onResize={handleResizeElement}
-                        onDoubleClick={handleEditElement}
-                        onRightClick={handleDeleteElement}
-                    >
-                        <CodeElement
-                        id={e.id}
-                        code={e.code}
-                        fontSize={e.fontSize}
-                        width={e.width}
-                        height={e.height}
-                        x={0}
-                        y={0}
-                        zIndex={e.zIndex}
-                        onDoubleClick={() => {}}
-                        onRightClick={() => {}}
-                        />
-                    </DraggableElement>
-                    );
-                }
-                })}
+              if (el.type === 'text') {
+                const e = el as TextElementData;
+                return (
+                  <DraggableElement
+                    key={e.id}
+                    id={e.id}
+                    x={e.x}
+                    y={e.y}
+                    width={e.width}
+                    height={e.height}
+                    zIndex={e.zIndex}
+                    slideRef={slideRef}
+                    onMove={handleMoveElement}
+                    onResize={handleResizeElement}
+                    onDoubleClick={handleEditElement}
+                    onRightClick={handleDeleteElement}
+                  >
+                    <TextElement
+                      id={e.id}
+                      text={e.text}
+                      fontSize={e.fontSize}
+                      color={e.color}
+                      width={e.width}
+                      height={e.height}
+                      x={0}
+                      y={0}
+                      zIndex={e.zIndex}
+                      onDoubleClick={() => {}}
+                      onRightClick={() => {}}
+                    />
+                  </DraggableElement>
+                );
+              } else if (el.type === 'image') {
+                const e = el as ImageElementData;
+                return (
+                  <DraggableElement
+                    key={e.id}
+                    id={e.id}
+                    x={e.x}
+                    y={e.y}
+                    width={e.width}
+                    height={e.height}
+                    zIndex={e.zIndex}
+                    slideRef={slideRef}
+                    onMove={handleMoveElement}
+                    onResize={handleResizeElement}
+                    onDoubleClick={handleEditElement}
+                    onRightClick={handleDeleteElement}
+                  >
+                    <ImageElement
+                      id={e.id}
+                      src={e.src}
+                      alt={e.alt}
+                      width={e.width}
+                      height={e.height}
+                      x={0}
+                      y={0}
+                      zIndex={e.zIndex}
+                      onDoubleClick={() => {}}
+                      onRightClick={() => {}}
+                    />
+                  </DraggableElement>
+                );
+              } else if (el.type === 'video') {
+                const e = el as VideoElementData;
+                return (
+                  <DraggableElement
+                    key={e.id}
+                    id={e.id}
+                    x={e.x}
+                    y={e.y}
+                    width={e.width}
+                    height={e.height}
+                    zIndex={e.zIndex}
+                    slideRef={slideRef}
+                    onMove={handleMoveElement}
+                    onResize={handleResizeElement}
+                    onDoubleClick={handleEditElement}
+                    onRightClick={handleDeleteElement}
+                  >
+                    <VideoElement
+                      id={e.id}
+                      url={e.url}
+                      autoplay={e.autoplay}
+                      width={e.width}
+                      height={e.height}
+                      x={0}
+                      y={0}
+                      zIndex={e.zIndex}
+                      onDoubleClick={() => {}}
+                      onRightClick={() => {}}
+                    />
+                  </DraggableElement>
+                );
+              } else if (el.type === 'code') {
+                const e = el as CodeElementData;
+                return (
+                  <DraggableElement
+                    key={e.id}
+                    id={e.id}
+                    x={e.x}
+                    y={e.y}
+                    width={e.width}
+                    height={e.height}
+                    zIndex={e.zIndex}
+                    slideRef={slideRef}
+                    onMove={handleMoveElement}
+                    onResize={handleResizeElement}
+                    onDoubleClick={handleEditElement}
+                    onRightClick={handleDeleteElement}
+                  >
+                    <CodeElement
+                      id={e.id}
+                      code={e.code}
+                      fontSize={e.fontSize}
+                      width={e.width}
+                      height={e.height}
+                      x={0}
+                      y={0}
+                      zIndex={e.zIndex}
+                      onDoubleClick={() => {}}
+                      onRightClick={() => {}}
+                    />
+                  </DraggableElement>
+                );
+              }
+            })}
             {/* Slide number - bottom left */}
             <Text
               position="absolute"
@@ -837,15 +837,15 @@ function EditPresentationPage() {
 
         {/* Controls below canvas */}
         <Flex justify="center" align="center" gap={4} mt={4}>
-            {/* Left group - navigation */}
-            <Flex gap={4} align="center">
-                <Button
-                    onClick={() => setCurrentSlideIndex((prev) => prev - 1)}
-                    disabled={isFirst}
-                    colorPalette={isFirst ? 'gray' : 'blue'}
-                    variant={isFirst ? 'outline' : 'solid'}
-                    size="sm"
-                >
+          {/* Left group - navigation */}
+          <Flex gap={4} align="center">
+            <Button
+              onClick={() => setCurrentSlideIndex((prev) => prev - 1)}
+              disabled={isFirst}
+              colorPalette={isFirst ? 'gray' : 'blue'}
+              variant={isFirst ? 'outline' : 'solid'}
+              size="sm"
+            >
                 ‹
             </Button>
             <Button
@@ -854,31 +854,31 @@ function EditPresentationPage() {
               size="sm"
             >
                 +
-                </Button>
-                <Button
-                    onClick={() => setCurrentSlideIndex((prev) => prev + 1)}
-                    disabled={isLast}
-                    colorPalette={isLast ? 'gray' : 'blue'}
-                    variant={isLast ? 'outline' : 'solid'}
-                    size="sm"
-                >
+            </Button>
+            <Button
+              onClick={() => setCurrentSlideIndex((prev) => prev + 1)}
+              disabled={isLast}
+              colorPalette={isLast ? 'gray' : 'blue'}
+              variant={isLast ? 'outline' : 'solid'}
+              size="sm"
+            >
                 ›
             </Button>
           </Flex>
 
-            {/* Right group - destructive action */}
-            <Button
-                colorPalette="red"
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                    if (presentation && presentation.slides.length === 1) {
-                    setError('Cannot delete the only slide. Delete the presentation instead.');
-                    return;
-                    }
-                    setShowDeleteSlideConfirm(true);
-                }}
-            >
+          {/* Right group - destructive action */}
+          <Button
+            colorPalette="red"
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              if (presentation && presentation.slides.length === 1) {
+                setError('Cannot delete the only slide. Delete the presentation instead.');
+                return;
+              }
+              setShowDeleteSlideConfirm(true);
+            }}
+          >
                 🗑 Delete Slide
           </Button>
         </Flex>
@@ -913,15 +913,15 @@ function EditPresentationPage() {
 
       {showAddText && (
         <AddTextModal
-            onClose={() => {setShowAddText(false); setEditingElement(null);}}
-            onAdd={editingElement ? handleSaveTextEdit : handleAddText}
-            initialValues={editingElementData ? {
-                text: editingElementData.text,
-                fontSize: editingElementData.fontSize,
-                color: editingElementData.color,
-                width: editingElementData.width,
-                height: editingElementData.height,
-            } : undefined}
+          onClose={() => {setShowAddText(false); setEditingElement(null);}}
+          onAdd={editingElement ? handleSaveTextEdit : handleAddText}
+          initialValues={editingElementData ? {
+            text: editingElementData.text,
+            fontSize: editingElementData.fontSize,
+            color: editingElementData.color,
+            width: editingElementData.width,
+            height: editingElementData.height,
+          } : undefined}
         />
       )}
 
@@ -931,14 +931,14 @@ function EditPresentationPage() {
           onAdd={editingImageElement ? handleSaveImageEdit : handleAddImage}
           initialValues={
             editingImageElement
-                ? (() => {
-                    const e = currentSlide?.elements.find(
-                    (el) => el.id === editingImageElement.id
-                    ) as ImageElementData | undefined;
-                    return e ? { src: e.src, alt: e.alt, width: e.width, height: e.height } : undefined;
-                })()
-                : undefined
-            }
+              ? (() => {
+                const e = currentSlide?.elements.find(
+                  (el) => el.id === editingImageElement.id
+                ) as ImageElementData | undefined;
+                return e ? { src: e.src, alt: e.alt, width: e.width, height: e.height } : undefined;
+              })()
+              : undefined
+          }
         />
       )}
       {showAddVideo && (
@@ -947,39 +947,39 @@ function EditPresentationPage() {
           onAdd={editingVideoElement ? handleSaveVideoEdit : handleAddVideo}
           initialValues={
             editingVideoElement
-                ? (() => {
-                    const e = currentSlide?.elements.find(
-                    (el) => el.id === editingVideoElement.id
-                    ) as VideoElementData | undefined;
-                    return e ? { url: e.url, autoplay: e.autoplay, width: e.width, height: e.height } : undefined;
-                })()
-                : undefined
-            }
+              ? (() => {
+                const e = currentSlide?.elements.find(
+                  (el) => el.id === editingVideoElement.id
+                ) as VideoElementData | undefined;
+                return e ? { url: e.url, autoplay: e.autoplay, width: e.width, height: e.height } : undefined;
+              })()
+              : undefined
+          }
         />
       )}
       {showAddCode && (
         <AddCodeModal
-            onClose={() => { setShowAddCode(false); setEditingCodeElement(null); }}
-            onAdd={editingCodeElement ? handleSaveCodeEdit : handleAddCode}
-            initialValues={
+          onClose={() => { setShowAddCode(false); setEditingCodeElement(null); }}
+          onAdd={editingCodeElement ? handleSaveCodeEdit : handleAddCode}
+          initialValues={
             editingCodeElement
-                ? (() => {
-                    const e = currentSlide?.elements.find(
-                    (el) => el.id === editingCodeElement.id
-                    ) as CodeElementData | undefined;
-                    return e ? { code: e.code, fontSize: e.fontSize, width: e.width, height: e.height } : undefined;
-                })()
-                : undefined
-            }
+              ? (() => {
+                const e = currentSlide?.elements.find(
+                  (el) => el.id === editingCodeElement.id
+                ) as CodeElementData | undefined;
+                return e ? { code: e.code, fontSize: e.fontSize, width: e.width, height: e.height } : undefined;
+              })()
+              : undefined
+          }
         />
       )}
       {showBackgroundModal && (
         <BackgroundModal
-            currentBackground={currentSlide?.background || ''}
-            defaultBackground={presentation?.defaultBackground || ''}
-            onClose={() => setShowBackgroundModal(false)}
-            onApplyToSlide={handleApplyBackgroundToSlide}
-            onApplyAsDefault={handleApplyDefaultBackground}
+          currentBackground={currentSlide?.background || ''}
+          defaultBackground={presentation?.defaultBackground || ''}
+          onClose={() => setShowBackgroundModal(false)}
+          onApplyToSlide={handleApplyBackgroundToSlide}
+          onApplyAsDefault={handleApplyDefaultBackground}
         />
       )}
     </Box>
