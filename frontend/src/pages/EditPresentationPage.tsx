@@ -20,6 +20,7 @@ import CodeElement from "../components/CodeElement";
 import DraggableElement from "../components/DraggableElement";
 import BackgroundModal from '../components/BackgroundModal';
 import SlideControlPanel from '../components/SlideControlPanel';
+import { BACKEND_URL } from '../config';
 
 interface TextElementData {
     id: string;
@@ -115,7 +116,7 @@ function EditPresentationPage() {
     const fetchPresentation = async () => {
       const token = localStorage.getItem('token');
       try {
-        const res = await fetch('http://localhost:5005/store', {
+        const res = await fetch(`${BACKEND_URL}/store`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
@@ -143,13 +144,13 @@ function EditPresentationPage() {
   // Save entire presentation back to store
   const savePresentation = async (updated: Presentation) => {
     const token = localStorage.getItem('token');
-    const res = await fetch('http://localhost:5005/store', {
+    const res = await fetch(`${BACKEND_URL}/store`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await res.json();
     const all: Presentation[] = data.store?.presentations || [];
     const updatedAll = all.map((p) => p.id === id ? updated : p);
-    await fetch('http://localhost:5005/store', {
+    await fetch(`${BACKEND_URL}/store`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -202,14 +203,13 @@ function EditPresentationPage() {
   const handleDelete = async () => {
     const token = localStorage.getItem('token');
     try {
-      const res = await fetch('http://localhost:5005/store', {
+      const res = await fetch(`${BACKEND_URL}:5005/store`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
       const all: Presentation[] = data.store?.presentations || [];
       const updated = all.filter((p) => p.id !== id);
-
-      await fetch('http://localhost:5005/store', {
+      await fetch(`${BACKEND_URL}/store`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

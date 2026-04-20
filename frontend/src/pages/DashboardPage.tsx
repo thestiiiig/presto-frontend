@@ -1,3 +1,4 @@
+import { BACKEND_URL } from '../config';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -31,7 +32,7 @@ function DashboardPage() {
     const fetchPresentations = async () => {
       const token = localStorage.getItem('token');
       try {
-        const res = await fetch('http://localhost:5005/store', {
+        const res = await fetch(`${BACKEND_URL}/store`, {
           headers: { 'Authorization': `Bearer ${token}` },
         });
         const data = await res.json();
@@ -47,7 +48,7 @@ function DashboardPage() {
     const token = localStorage.getItem('token');
 
     try {
-      await fetch('http://localhost:5005/admin/auth/logout', {
+      await fetch(`${BACKEND_URL}/admin/auth/logout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -72,7 +73,7 @@ function DashboardPage() {
 
     try {
       // Get existing store
-      const getRes = await fetch('http://localhost:5005/store', {
+      const getRes = await fetch(`${BACKEND_URL}/store`, {
         headers: { 'Authorization': `Bearer ${token}` },
       });
       const getData = await getRes.json();
@@ -88,7 +89,7 @@ function DashboardPage() {
 
       const updatedPresentations = [...existingPresentations, newPresentation];
 
-      const putRes = await fetch('http://localhost:5005/store', {
+      const putRes = await fetch(`${BACKEND_URL}/store`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

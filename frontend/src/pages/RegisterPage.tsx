@@ -1,3 +1,4 @@
+import { BACKEND_URL } from '../config';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { KeyboardEvent } from 'react';
@@ -34,7 +35,7 @@ function RegisterPage() {
     }
 
     try {
-      const response = await fetch('http://localhost:5005/admin/auth/register', {
+      const response = await fetch(`${BACKEND_URL}/admin/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password, name }),
