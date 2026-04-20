@@ -5,7 +5,7 @@ import {
 
 interface AddTextModalProps {
   onClose: () => void;
-  onAdd: (text: string, fontSize: number, color: string, fontFamily: string, width: number, height: number) => void;
+  onAdd: (_text: string, _fontSize: number, _color: string, _fontFamily: string, _width: number, _height: number) => void;
   initialValues?: {
     text: string;
     fontSize: number;

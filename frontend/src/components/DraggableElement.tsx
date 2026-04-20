@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, useCallback } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import type { RefObject, ReactNode } from 'react';
 import type { MouseEvent as ReactMouseEvent } from 'react';
 import { Box } from '@chakra-ui/react';
@@ -11,10 +11,10 @@ interface DraggableElementProps {
   height: number;
   zIndex: number;
   slideRef: RefObject<HTMLDivElement | null>;
-  onMove: (id: string, newX: number, newY: number) => void;
-  onResize: (id: string, newX: number, newY: number, newWidth: number, newHeight: number) => void;
-  onDoubleClick: (id: string) => void;
-  onRightClick: (id: string) => void;
+  onMove: (_id: string, _newX: number, _newY: number) => void;
+  onResize: (_id: string, _newX: number, _newY: number, _newWidth: number, _newHeight: number) => void;
+  onDoubleClick: (_id: string) => void;
+  onRightClick: (_id: string) => void;
   children: ReactNode;
 }
 
@@ -24,9 +24,7 @@ function DraggableElement({
   id, x, y, width, height, zIndex,
   slideRef, onMove, onResize, onDoubleClick, onRightClick, children,
 }: DraggableElementProps) {
-
   const [isSelected, setIsSelected] = useState(false);
-
 
   const isDragging = useRef(false);
   const isResizing = useRef<Corner | null>(null);
@@ -70,19 +68,16 @@ function DraggableElement({
     startSize.current = { width, height };
   };
 
-  const handleMouseMove = useCallback((e: MouseEvent) => {
+  const handleMouseMove = (e: MouseEvent) => {
     if (!slideRef.current) return;
     const rect = slideRef.current.getBoundingClientRect();
 
-    // Calculate how much mouse has moved in pixels
     const deltaPxX = e.clientX - startMouse.current.x;
     const deltaPxY = e.clientY - startMouse.current.y;
 
-    // Convert to percentage
     const deltaPercentX = (deltaPxX / rect.width) * 100;
     const deltaPercentY = (deltaPxY / rect.height) * 100;
 
-    // Handle resizing
     if (isResizing.current) {
       let newX = startPos.current.x;
       let newY = startPos.current.y;
@@ -109,11 +104,9 @@ function DraggableElement({
         newHeight = startSize.current.height - deltaPercentY;
       }
 
-      // Minimum size 1%
       newWidth = Math.max(1, newWidth);
       newHeight = Math.max(1, newHeight);
 
-      // Clamp to slide bounds
       newX = Math.max(0, newX);
       newY = Math.max(0, newY);
       if (newX + newWidth > 100) newWidth = 100 - newX;
@@ -123,19 +116,18 @@ function DraggableElement({
       return;
     }
 
-    // Handle moving
     if (!isDragging.current) return;
     let newX = startPos.current.x + deltaPercentX;
     let newY = startPos.current.y + deltaPercentY;
     newX = Math.max(0, Math.min(newX, 100 - width));
     newY = Math.max(0, Math.min(newY, 100 - height));
     onMove(id, newX, newY);
-  }, [id, width, height, slideRef, onMove, onResize]);
+  };
 
-  const handleMouseUp = useCallback(() => {
+  const handleMouseUp = () => {
     isDragging.current = false;
     isResizing.current = null;
-  }, []);
+  };
 
   useEffect(() => {
     window.addEventListener('mousemove', handleMouseMove);
@@ -144,7 +136,7 @@ function DraggableElement({
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [handleMouseMove, handleMouseUp]);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = () => setIsSelected(false);
@@ -174,16 +166,10 @@ function DraggableElement({
         onRightClick(id);
       }}
     >
-      {/* Inner box clips children to element bounds */}
-      <Box
-        position="absolute"
-        inset={0}
-        overflow="hidden"
-      >
+      <Box position="absolute" inset={0} overflow="hidden">
         {children}
       </Box>
 
-      {/* Corner handles */}
       {isSelected && cornerPositions.map(({ top, left, corner }, i) => (
         <Box
           key={i}
