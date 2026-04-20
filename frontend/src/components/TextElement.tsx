@@ -5,6 +5,7 @@ interface TextElementProps {
   text: string;
   fontSize: number;
   color: string;
+  fontFamily: string;
   width: number;
   height: number;
   x: number;
@@ -15,8 +16,8 @@ interface TextElementProps {
 }
 
 function TextElement({
-  text, fontSize, color,
-  onDoubleClick, onRightClick, id,
+  id, text, fontSize, color, fontFamily,
+  onDoubleClick, onRightClick,
 }: TextElementProps) {
   return (
     <Box
@@ -28,6 +29,7 @@ function TextElement({
       style={{
         fontSize: `${fontSize}em`,
         color: color,
+        fontFamily: fontFamily,
         textAlign: 'left',
         padding: '4px',
         boxSizing: 'border-box',

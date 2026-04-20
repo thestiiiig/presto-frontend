@@ -9,8 +9,8 @@ interface BackgroundModalProps {
     currentBackground: string;
     defaultBackground: string;
     onClose: () => void;
-    onApplyToSlide: (background: string) => void;
-    onApplyAsDefault: (background: string) => void;
+    onApplyToSlide: (_background: string) => void;
+    onApplyAsDefault: (_background: string) => void;
 }
 
 type BackgroundType = 'solid' | 'gradient' | 'image';

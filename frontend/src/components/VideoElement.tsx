@@ -9,8 +9,8 @@ interface VideoElementProps {
   x: number;
   y: number;
   zIndex: number;
-  onDoubleClick: (id: string) => void;
-  onRightClick: (id: string) => void;
+  onDoubleClick: (_id: string) => void;
+  onRightClick: (_id: string) => void;
 }
 
 function VideoElement({

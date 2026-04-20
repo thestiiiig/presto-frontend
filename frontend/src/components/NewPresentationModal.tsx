@@ -11,7 +11,7 @@ import {
 
 interface NewPresentationModalProps {
   onClose: () => void;
-  onCreate: (name: string, description: string, thumbnail: string) => void;
+  onCreate: (_name: string, _description: string, _thumbnail: string) => void;
 }
 
 function NewPresentationModal({ onClose, onCreate }: NewPresentationModalProps) {

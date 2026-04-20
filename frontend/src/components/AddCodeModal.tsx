@@ -5,7 +5,7 @@ import {
 
 interface AddCodeModalProps {
   onClose: () => void;
-  onAdd: (code: string, fontSize: number, width: number, height: number) => void;
+  onAdd: (_code: string, _fontSize: number, _width: number, _height: number) => void;
   initialValues?: {
     code: string;
     fontSize: number;

@@ -5,7 +5,7 @@ import {
 
 interface AddVideoModalProps {
   onClose: () => void;
-  onAdd: (url: string, autoplay: boolean, width: number, height: number) => void;
+  onAdd: (_url: string, _autoplay: boolean, _width: number, _height: number) => void;
   initialValues?: {
     url: string;
     autoplay: boolean;

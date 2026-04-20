@@ -6,7 +6,7 @@ import {
 
 interface AddImageModalProps {
   onClose: () => void;
-  onAdd: (src: string, alt: string, width: number, height: number) => void;
+  onAdd: (_src: string, _alt: string, _width: number, _height: number) => void;
   initialValues?: {
     src: string;
     alt: string;

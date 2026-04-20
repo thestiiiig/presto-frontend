@@ -9,12 +9,12 @@ interface ImageElementProps {
     x: number;
     y: number;
     zIndex: number;
-    onDoubleClick: (id: string) => void;
-    onRightClick: (id: string) => void;
+    onDoubleClick: (_id: string) => void;
+    onRightClick: (_id: string) => void;
 }
 
 function ImageElement({
-  id, src, alt,
+  id: _id, src, alt,
   onDoubleClick, onRightClick,
 }: ImageElementProps) {
   return (
@@ -26,10 +26,10 @@ function ImageElement({
       alignItems="center"
       justifyContent="center"
       style={{ cursor: 'default', boxSizing: 'border-box' }}
-      onDoubleClick={() => onDoubleClick(id)}
+      onDoubleClick={() => onDoubleClick(_id)}
       onContextMenu={(e) => {
         e.preventDefault();
-        onRightClick(id);
+        onRightClick(_id);
       }}
     >
       <img

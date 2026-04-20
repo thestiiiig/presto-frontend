@@ -12,7 +12,7 @@ interface EditPresentationModalProps {
   initialName: string;
   initialThumbnail: string;
   onClose: () => void;
-  onSave: (name: string, thumbnail: string) => void;
+  onSave: (_name: string, _thumbnail: string) => void;
 }
 
 function EditPresentationModal({ initialName, initialThumbnail, onClose, onSave }: EditPresentationModalProps) {

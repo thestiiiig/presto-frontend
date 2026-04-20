@@ -26,6 +26,7 @@ interface TextElementData {
     text: string;
     fontSize: number;
     color: string;
+    fontFamily: string;
     width: number;
     height: number;
     x: number;
@@ -246,7 +247,7 @@ function EditPresentationPage() {
     }
   };
 
-  const handleAddText = async (text: string, fontSize: number, color: string, width: number, height: number) => {
+  const handleAddText = async (text: string, fontSize: number, color: string, fontFamily: string, width: number, height: number) => {
     if (!presentation) return;
     const currentSlide = presentation.slides[currentSlideIndex];
     const newElement: TextElementData = {
@@ -255,6 +256,7 @@ function EditPresentationPage() {
       text,
       fontSize,
       color,
+      fontFamily,
       width,
       height,
       x: 0,
@@ -474,7 +476,7 @@ function EditPresentationPage() {
   };
 
   const handleSaveTextEdit = async (
-    text: string, fontSize: number, color: string, width: number, height: number
+    text: string, fontSize: number, color: string, fontFamily: string, width: number, height: number
   ) => {
     if (!presentation || !editingElement) return;
     const updatedSlides = presentation.slides.map((slide, i) =>
@@ -483,7 +485,7 @@ function EditPresentationPage() {
           ...slide,
           elements: slide.elements.map((el) =>
             el.id === editingElement.id
-              ? { ...el, text, fontSize, color, width, height }
+              ? { ...el, text, fontSize, color, fontFamily, width, height }
               : el
           ),
         }
@@ -717,6 +719,7 @@ function EditPresentationPage() {
                       text={e.text}
                       fontSize={e.fontSize}
                       color={e.color}
+                      fontFamily={e.fontFamily}
                       width={e.width}
                       height={e.height}
                       x={0}
@@ -919,6 +922,7 @@ function EditPresentationPage() {
             text: editingElementData.text,
             fontSize: editingElementData.fontSize,
             color: editingElementData.color,
+            fontFamily: editingElementData.fontFamily,
             width: editingElementData.width,
             height: editingElementData.height,
           } : undefined}
